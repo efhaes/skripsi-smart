@@ -1,0 +1,336 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    {% if mode == 'create' %}Tambah Kriteria{% else %}Edit Kriteria{% endif %}
+{% endblock %}
+
+{% block extra_css %}
+<style>
+/* =========================================================
+   PAGE
+   ========================================================= */
+.kriteria-form-page {
+    width: 100%;
+    max-width: 680px;
+    margin: 0 auto;
+}
+
+/* =========================================================
+   PAGE HEADER
+   ========================================================= */
+.kriteria-form-header {
+    margin-bottom: 18px;
+}
+
+.kriteria-form-header h1 {
+    margin-bottom: 5px;
+}
+
+.kriteria-form-header p {
+    margin: 0;
+    color: var(--ink-600);
+    font-size: 13.5px;
+    line-height: 1.5;
+}
+
+/* =========================================================
+   HERO / INFORMATION
+   ========================================================= */
+.kriteria-info {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    margin-bottom: 20px;
+    padding: 16px 18px;
+    background: #EFF6FF;
+    border: 1px solid #BFDBFE;
+    border-radius: var(--radius-lg);
+}
+
+.kriteria-info-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 38px;
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    background: var(--brand-100);
+    color: var(--brand-700);
+    font-size: 17px;
+    font-weight: 700;
+}
+
+.kriteria-info-content {
+    min-width: 0;
+}
+
+.kriteria-info-content h3 {
+    margin: 0 0 4px;
+    color: var(--ink-900);
+    font-size: 13.5px;
+    font-weight: 700;
+}
+
+.kriteria-info-content p {
+    margin: 0;
+    color: var(--ink-600);
+    font-size: 12.5px;
+    line-height: 1.55;
+}
+
+/* =========================================================
+   FORM CONTAINER
+   ========================================================= */
+.kriteria-form-container {
+    width: 100%;
+    padding: 26px 28px;
+    background: var(--surface);
+    border: 1px solid var(--ink-300);
+    border-radius: var(--radius-lg);
+}
+
+/* =========================================================
+   FORM
+   ========================================================= */
+.kriteria-form .form-group {
+    margin-bottom: 20px;
+}
+
+.kriteria-form .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+.kriteria-form .form-row .form-group {
+    min-width: 0;
+}
+
+.kriteria-form .form-group > label {
+    display: block;
+    margin-bottom: 7px;
+    color: var(--ink-900);
+    font-size: 12.5px;
+    font-weight: 600;
+}
+
+/* =========================================================
+   INPUT / SELECT
+   ========================================================= */
+.kriteria-form input:not([type="checkbox"]),
+.kriteria-form select,
+.kriteria-form textarea {
+    width: 100%;
+    min-height: 42px;
+    padding: 9px 12px;
+    border: 1px solid var(--ink-300);
+    border-radius: var(--radius-md);
+    background: var(--surface);
+    color: var(--ink-900);
+    font-family: var(--font-body);
+    font-size: 13.5px;
+    transition: border-color .15s ease, box-shadow .15s ease;
+}
+
+.kriteria-form input:not([type="checkbox"]):hover,
+.kriteria-form select:hover,
+.kriteria-form textarea:hover {
+    border-color: #CBD5E1;
+}
+
+.kriteria-form input:not([type="checkbox"]):focus,
+.kriteria-form select:focus,
+.kriteria-form textarea:focus {
+    outline: none;
+    border-color: var(--brand-500);
+    box-shadow: 0 0 0 3px var(--brand-100);
+}
+
+/* =========================================================
+   FIELD HINT & ERROR
+   ========================================================= */
+.field-hint {
+    margin: 6px 0 0;
+    color: var(--ink-600);
+    font-size: 11.5px;
+    line-height: 1.45;
+}
+
+.field-error {
+    margin-top: 5px;
+    color: var(--status-sangat-kurang);
+    font-size: 11.5px;
+    line-height: 1.4;
+}
+
+/* =========================================================
+   CHECKBOX
+   ========================================================= */
+.form-group-checkbox {
+    margin-top: 2px;
+}
+
+.form-group-checkbox label {
+    display: inline-flex !important;
+    align-items: center;
+    gap: 9px;
+    margin: 0 !important;
+    cursor: pointer;
+    color: var(--ink-900);
+    font-size: 13px !important;
+    font-weight: 600;
+}
+
+.form-group-checkbox input[type="checkbox"] {
+    width: 17px;
+    height: 17px;
+    margin: 0;
+    accent-color: var(--brand-600);
+    cursor: pointer;
+}
+
+/* =========================================================
+   ACTION
+   ========================================================= */
+.kriteria-form-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 6px;
+    padding-top: 20px;
+    border-top: 1px solid var(--ink-300);
+}
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+@media (max-width: 700px) {
+    .kriteria-form-page {
+        max-width: 100%;
+    }
+
+    .kriteria-form-container {
+        padding: 20px;
+        border-radius: var(--radius-md);
+    }
+
+    .kriteria-form .form-row {
+        grid-template-columns: 1fr;
+        gap: 0;
+    }
+
+    .kriteria-info {
+        padding: 14px;
+    }
+
+    .kriteria-form-actions {
+        flex-direction: column-reverse;
+    }
+
+    .kriteria-form-actions .btn {
+        width: 100%;
+    }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="kriteria-form-page">
+    <div class="page-header kriteria-form-header">
+        <h1>{% if mode == 'create' %}Tambah Kriteria{% else %}Edit Kriteria{% endif %}</h1>
+        <p>
+            {% if mode == 'create' %}
+                Tambahkan kriteria baru yang akan digunakan dalam proses penilaian karyawan.
+            {% else %}
+                Perbarui pengaturan kriteria <strong>{{ kriteria.kode }} - {{ kriteria.nama }}</strong>.
+            {% endif %}
+        </p>
+    </div>
+
+    <div class="kriteria-info">
+        <div class="kriteria-info-icon">i</div>
+        <div class="kriteria-info-content">
+            <h3>Tentang Kriteria Penilaian</h3>
+            <p>
+                Kriteria digunakan sebagai dasar perhitungan metode SMART. Atur kode, nama, bobot, tipe kriteria, dan urutan tampil sesuai kebutuhan proses penilaian karyawan.
+            </p>
+        </div>
+    </div>
+
+    <div class="kriteria-form-container">
+        <form method="post" novalidate class="kriteria-form">
+            {% csrf_token %}
+
+            {% if form.non_field_errors %}
+                <div class="alert alert-error">{{ form.non_field_errors }}</div>
+            {% endif %}
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="{{ form.kode.id_for_label }}">Kode Kriteria</label>
+                    {{ form.kode }}
+                    {% if form.kode.errors %}
+                        <div class="field-error">{{ form.kode.errors|join:", " }}</div>
+                    {% endif %}
+                    <p class="field-hint">Kode unik kriteria, misalnya C1, C2, atau C3.</p>
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.urutan.id_for_label }}">Urutan Tampil</label>
+                    {{ form.urutan }}
+                    {% if form.urutan.errors %}
+                        <div class="field-error">{{ form.urutan.errors|join:", " }}</div>
+                    {% endif %}
+                    <p class="field-hint">Menentukan posisi kriteria pada tabel penilaian.</p>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.nama.id_for_label }}">Nama Kriteria</label>
+                {{ form.nama }}
+                {% if form.nama.errors %}
+                    <div class="field-error">{{ form.nama.errors|join:", " }}</div>
+                {% endif %}
+                <p class="field-hint">Masukkan nama yang menggambarkan aspek penilaian karyawan.</p>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="{{ form.bobot.id_for_label }}">Bobot (%)</label>
+                    {{ form.bobot }}
+                    {% if form.bobot.errors %}
+                        <div class="field-error">{{ form.bobot.errors|join:", " }}</div>
+                    {% endif %}
+                    <p class="field-hint">Besarnya pengaruh kriteria dalam perhitungan SMART.</p>
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.tipe.id_for_label }}">Tipe Kriteria</label>
+                    {{ form.tipe }}
+                    {% if form.tipe.errors %}
+                        <div class="field-error">{{ form.tipe.errors|join:", " }}</div>
+                    {% endif %}
+                    <p class="field-hint">Benefit untuk nilai yang semakin besar semakin baik, Cost untuk sebaliknya.</p>
+                </div>
+            </div>
+
+            <div class="form-group form-group-checkbox">
+                <label for="{{ form.aktif.id_for_label }}">
+                    {{ form.aktif }}
+                    Kriteria Aktif
+                </label>
+                <p class="field-hint">Kriteria aktif akan digunakan pada proses penilaian dan perhitungan SMART.</p>
+            </div>
+
+            <div class="form-actions kriteria-form-actions">
+                <a href="{% url 'kriteria_list' %}" class="btn btn-outline">Batal</a>
+                <button type="submit" class="btn btn-primary">
+                    {% if mode == 'create' %}Simpan Kriteria{% else %}Simpan Perubahan{% endif %}
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,27 @@
+/* ====================================================================
+   penilaian.css
+   Stylesheet halaman Data Penilaian — tabel generik di dalam .card
+   ==================================================================== */
+
+.page-header-row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+.aksi-cell { display: flex; gap: 8px; }
+.aksi-cell form { display: inline; }
+
+/* ==================== EMPTY STATE (dipakai lintas halaman) ==================== */
+.empty-state {
+    text-align: center;
+    padding: 48px 20px;
+    color: var(--ink-600);
+}
+.empty-state i {
+    font-size: 32px;
+    color: var(--ink-300);
+    margin-bottom: 12px;
+    display: block;
+}

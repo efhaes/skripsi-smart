@@ -1,0 +1,9 @@
+<form method="get" class="karyawan-filter">
+    <div class="form-group"><label for="bulan">Bulan</label><select name="bulan" id="bulan">
+        {% for nilai, label in daftar_bulan %}<option value="{{ nilai }}" {% if nilai == bulan_dipilih %}selected{% endif %}>{{ label }}</option>{% endfor %}
+    </select></div>
+    <div class="form-group"><label for="tahun">Tahun</label><select name="tahun" id="tahun">
+        {% for th in daftar_tahun %}<option value="{{ th }}" {% if th == tahun_dipilih %}selected{% endif %}>{{ th }}</option>{% endfor %}
+    </select></div>
+    <button class="btn btn-primary" type="submit">Tampilkan</button>
+</form>

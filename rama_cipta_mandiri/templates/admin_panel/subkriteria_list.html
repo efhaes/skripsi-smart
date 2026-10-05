@@ -1,0 +1,186 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Kelola Sub Kriteria{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/subkriteria_list.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<div class="page-header page-header-row">
+    <div>
+        <h1>Kelola Sub Kriteria</h1>
+        <p>Kelola opsi dan nilai sub kriteria untuk setiap kriteria penilaian.</p>
+    </div>
+
+    <a href="{% url 'subkriteria_create' %}" class="btn btn-primary">
+        + Tambah Sub Kriteria
+    </a>
+</div>
+
+<div class="subkriteria-table-wrapper">
+    <table class="subkriteria-table">
+
+            <thead>
+                <tr>
+                    <th class="col-no">No</th>
+                    <th class="col-kriteria">Kriteria</th>
+                    <th>Nama Opsi</th>
+                    <th class="col-nilai">Nilai</th>
+                    <th class="col-range">Range Nilai</th>
+                    <th class="col-aksi">Aksi</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                {% for group in kelompok_subkriteria %}
+
+                    {% for sk in group.subkriteria %}
+
+                    <tr class="{% if forloop.first %}group-start{% endif %}">
+
+                        {% if forloop.first %}
+
+                        <td
+                            class="col-no group-cell"
+                            rowspan="{{ group.subkriteria|length }}"
+                        >
+                            {{ forloop.parentloop.counter }}
+                        </td>
+
+                        <td
+                            class="col-kriteria group-cell"
+                            rowspan="{{ group.subkriteria|length }}"
+                        >
+                            <div class="kriteria-info">
+                                <strong>{{ group.kriteria.nama }}</strong>
+                                <span>{{ group.kriteria.kode }}</span>
+                            </div>
+                        </td>
+
+                        {% endif %}
+
+                        <td class="col-opsi">
+                            {{ sk.nama }}
+                        </td>
+
+                        <td class="col-nilai">
+                            <strong>{{ sk.nilai }}</strong>
+                        </td>
+
+                        <td class="col-range">
+                            {% if sk.range_nilai %}
+                                {{ sk.range_nilai }}
+                            {% else %}
+                                <span class="empty-value">—</span>
+                            {% endif %}
+                        </td>
+
+                        <td class="col-aksi">
+                            <div class="table-actions">
+
+                                <a
+                                    href="{% url 'subkriteria_update' sk.pk %}"
+                                    class="btn btn-outline btn-sm"
+                                >
+                                    Edit
+                                </a>
+
+                                <button
+                                    type="button"
+                                    class="btn btn-danger btn-sm"
+                                    onclick="openDeleteModal(
+                                        '{% url 'subkriteria_delete' sk.pk %}',
+                                        '{{ group.kriteria.kode|escapejs }} - {{ sk.nama|escapejs }}'
+                                    )"
+                                >
+                                    Hapus
+                                </button>
+
+                            </div>
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                {% empty %}
+
+                <tr>
+                    <td colspan="6" class="table-empty">
+                        Belum ada data sub kriteria.
+                    </td>
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+
+<!-- MODAL HAPUS -->
+<div class="modal-overlay" id="deleteModal">
+    <div class="modal-box">
+
+        <h3>Hapus Sub Kriteria?</h3>
+
+        <p>
+            Yakin ingin menghapus
+            <strong id="deleteModalNama"></strong>?
+            Tindakan ini tidak bisa dibatalkan.
+        </p>
+
+        <form method="post" id="deleteModalForm">
+            {% csrf_token %}
+
+            <div class="modal-actions">
+                <button
+                    type="button"
+                    class="btn btn-outline"
+                    onclick="closeDeleteModal()"
+                >
+                    Batal
+                </button>
+
+                <button
+                    type="submit"
+                    class="btn btn-danger"
+                >
+                    Ya, Hapus
+                </button>
+            </div>
+        </form>
+
+    </div>
+</div>
+
+{% endblock %}
+
+
+{% block extra_js %}
+<script>
+function openDeleteModal(url, nama) {
+    document.getElementById('deleteModalForm').action = url;
+    document.getElementById('deleteModalNama').textContent = nama;
+    document.getElementById('deleteModal').classList.add('show');
+}
+
+function closeDeleteModal() {
+    document.getElementById('deleteModal').classList.remove('show');
+}
+
+document.getElementById('deleteModal').addEventListener('click', function (e) {
+    if (e.target === this) {
+        closeDeleteModal();
+    }
+});
+</script>
+{% endblock %}

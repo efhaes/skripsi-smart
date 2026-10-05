@@ -1,0 +1,29 @@
+/* ==================== STAT CARD (versi horizontal, dipakai di list) ==================== */
+.stat-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+    border-top: 3px solid var(--brand-500);
+    margin-bottom: 20px;
+}
+
+.stat-label {
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--ink-600);
+}
+
+.stat-value {
+    font-family: var(--font-heading);
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--ink-900);
+    line-height: 1.2;
+    margin-top: 2px;
+}
+
+@media (max-width: 700px) {
+    .stat-card { align-items: flex-start; }
+}

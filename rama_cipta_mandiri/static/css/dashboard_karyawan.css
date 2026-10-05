@@ -1,0 +1,27 @@
+/* Dashboard internal grids do not alter the global sidebar/topbar offsets. */
+.dashboard-overview { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 20px; margin-bottom: 24px; align-items: start; }
+.dashboard-overview > * { min-width: 0; margin-bottom: 0; }
+.dashboard-overview .karyawan-attendance-body { grid-template-columns: 1fr; gap: 12px; }
+.dashboard-comparison { margin-top: 16px; }
+.dashboard-comparison > div { display: grid; grid-template-columns: minmax(90px, .7fr) minmax(0, 1.3fr); gap: 16px; padding: 12px 0; border-bottom: 1px solid var(--ink-100); }
+.dashboard-comparison > div:last-child { border-bottom: 0; padding-bottom: 0; }
+.dashboard-comparison dt { font-size: 13px; color: var(--ink-600); }
+.dashboard-comparison dd { font-size: 16px; font-weight: 600; }
+.dashboard-comparison dd .karyawan-note { font-weight: 400; margin-top: 4px; }
+.dashboard-comparison-values { overflow-wrap: anywhere; }
+.dashboard-period-value { font-size: 22px; font-weight: 600; margin-bottom: 12px; }
+.dashboard-period > .btn { margin-top: 20px; }
+.dashboard-history-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; align-items: start; }
+.dashboard-history-grid > .karyawan-section { margin-bottom: 0; }
+.dashboard-history-grid .karyawan-section-header { min-height: 58px; align-content: start; }
+.dashboard-history-grid .karyawan-section-header > .karyawan-muted { width: 100%; font-size: 12px; }
+.dashboard-selected, .dashboard-selected:hover { background: var(--brand-100); }
+.dashboard-selected > td:first-child { box-shadow: inset 3px 0 var(--brand-600); }
+@media (max-width: 1200px) {
+    .dashboard-history-grid { grid-template-columns: 1fr; gap: 24px; }
+    .dashboard-history-grid .karyawan-section-header { min-height: 0; }
+}
+@media (max-width: 760px) {
+    .dashboard-overview { grid-template-columns: 1fr; }
+    .dashboard-comparison > div { grid-template-columns: 1fr; gap: 5px; }
+}

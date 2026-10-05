@@ -1,0 +1,563 @@
+/* =========================================================
+   DASHBOARD ADMIN
+   ========================================================= */
+
+.dashboard-page-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.dashboard-period {
+    flex-shrink: 0;
+    text-align: right;
+}
+
+.dashboard-period span {
+    display: block;
+    margin-bottom: 3px;
+    color: var(--ink-600);
+    font-size: 10.5px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .05em;
+}
+
+.dashboard-period strong {
+    color: var(--ink-900);
+    font-size: 14px;
+    font-weight: 700;
+}
+
+/* =========================================================
+   SUMMARY
+   ========================================================= */
+
+.dashboard-summary {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    margin-bottom: 22px;
+    overflow: hidden;
+    background: var(--surface);
+    border: 1px solid var(--ink-300);
+    border-radius: var(--radius-lg);
+}
+
+.summary-item {
+    min-width: 0;
+    padding: 20px 22px;
+}
+
+.summary-item:not(:last-child) {
+    border-right: 1px solid var(--ink-300);
+}
+
+.summary-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 11px;
+}
+
+.summary-label {
+    color: var(--ink-600);
+    font-size: 11.5px;
+    font-weight: 600;
+}
+
+.summary-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    flex-shrink: 0;
+    border-radius: 9px;
+    background: var(--brand-100);
+    color: var(--brand-700);
+    font-size: 13px;
+}
+
+.summary-value {
+    margin-bottom: 4px;
+    color: var(--ink-900);
+    font-size: 25px;
+    font-weight: 700;
+    line-height: 1.1;
+}
+
+.summary-caption {
+    color: var(--ink-600);
+    font-size: 11px;
+    line-height: 1.45;
+}
+
+/* =========================================================
+   MAIN GRID
+   ========================================================= */
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.5fr) minmax(300px, .8fr);
+    gap: 22px;
+}
+
+.dashboard-section {
+    overflow: hidden;
+    background: var(--surface);
+    border: 1px solid var(--ink-300);
+    border-radius: var(--radius-lg);
+}
+
+.section-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 17px 20px;
+    border-bottom: 1px solid var(--ink-300);
+}
+
+.section-head h2 {
+    margin: 0 0 3px;
+    color: var(--ink-900);
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.section-head p {
+    margin: 0;
+    color: var(--ink-600);
+    font-size: 11.5px;
+    line-height: 1.4;
+}
+
+.section-link {
+    flex-shrink: 0;
+    color: var(--brand-600);
+    font-size: 11.5px;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.section-link:hover {
+    color: var(--brand-700);
+    text-decoration: underline;
+}
+
+/* =========================================================
+   WORKFLOW
+   ========================================================= */
+
+.workflow-list {
+    padding: 3px 20px;
+}
+
+.workflow-item {
+    display: grid;
+    grid-template-columns: 38px minmax(0, 1fr) 125px;
+    align-items: center;
+    gap: 13px;
+    padding: 16px 0;
+}
+
+.workflow-item:not(:last-child) {
+    border-bottom: 1px solid var(--ink-300);
+}
+
+.workflow-number {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 9px;
+    background: var(--brand-100);
+    color: var(--brand-700);
+    font-size: 11.5px;
+    font-weight: 700;
+}
+
+.workflow-content {
+    min-width: 0;
+}
+
+.workflow-content strong {
+    display: block;
+    margin-bottom: 3px;
+    color: var(--ink-900);
+    font-size: 12.5px;
+    font-weight: 700;
+}
+
+.workflow-content span {
+    display: block;
+    color: var(--ink-600);
+    font-size: 11px;
+    line-height: 1.45;
+}
+
+.workflow-side {
+    text-align: right;
+}
+
+.workflow-side strong {
+    display: block;
+    margin-bottom: 2px;
+    color: var(--ink-900);
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.workflow-side span {
+    display: block;
+    color: var(--ink-600);
+    font-size: 10.5px;
+}
+
+.workflow-side a {
+    display: inline-block;
+    margin-top: 5px;
+    color: var(--brand-600);
+    font-size: 10.5px;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.workflow-side a:hover {
+    color: var(--brand-700);
+    text-decoration: underline;
+}
+
+/* =========================================================
+   STATUS SISTEM
+   ========================================================= */
+
+.status-list {
+    padding: 3px 20px;
+}
+
+.status-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+    padding: 14px 0;
+}
+
+.status-row:not(:last-child) {
+    border-bottom: 1px solid var(--ink-300);
+}
+
+.status-row > span {
+    color: var(--ink-600);
+    font-size: 11.5px;
+}
+
+.status-row > strong {
+    color: var(--ink-900);
+    font-size: 12px;
+    font-weight: 700;
+    text-align: right;
+}
+
+.status-row strong i {
+    margin-right: 3px;
+}
+
+.text-valid {
+    color: var(--status-sangat-baik) !important;
+}
+
+.text-invalid {
+    color: var(--status-sangat-kurang) !important;
+}
+
+.text-warning {
+    color: var(--status-cukup) !important;
+}
+
+/* =========================================================
+   PROGRESS
+   ========================================================= */
+
+.progress-area {
+    padding: 16px 20px 18px;
+    border-top: 1px solid var(--ink-300);
+    background: var(--bg);
+}
+
+.progress-info {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    margin-bottom: 8px;
+}
+
+.progress-info span {
+    color: var(--ink-600);
+    font-size: 11px;
+}
+
+.progress-info strong {
+    color: var(--ink-900);
+    font-size: 11.5px;
+    font-weight: 700;
+}
+
+.progress-track {
+    width: 100%;
+    height: 7px;
+    overflow: hidden;
+    border-radius: 20px;
+    background: var(--ink-300);
+}
+
+.progress-fill {
+    height: 100%;
+    border-radius: inherit;
+    background: var(--brand-600);
+}
+
+/* =========================================================
+   KARYAWAN TERBAIK
+   ========================================================= */
+
+.best-section {
+    margin-top: 22px;
+}
+
+.best-table-wrap {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.best-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.best-table th {
+    padding: 11px 20px;
+    background: var(--bg);
+    border-bottom: 1px solid var(--ink-300);
+    color: var(--ink-600);
+    font-size: 10.5px;
+    font-weight: 600;
+    text-align: left;
+    white-space: nowrap;
+}
+
+.best-table td {
+    padding: 13px 20px;
+    border-bottom: 1px solid var(--ink-300);
+    color: var(--ink-600);
+    font-size: 11.5px;
+    vertical-align: middle;
+}
+
+.best-table tbody tr:last-child td {
+    border-bottom: 0;
+}
+
+.best-table tbody tr:hover {
+    background: var(--bg);
+}
+
+.best-table td > strong {
+    color: var(--ink-900);
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.employee-winner {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    min-width: 190px;
+}
+
+.winner-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    flex-shrink: 0;
+    border-radius: 9px;
+    background: #FFFBEB;
+    color: #D97706;
+    font-size: 13px;
+}
+
+.employee-winner strong {
+    display: block;
+    margin-bottom: 2px;
+    color: var(--ink-900);
+    font-size: 12.5px;
+    font-weight: 700;
+}
+
+.employee-winner span {
+    color: var(--ink-600);
+    font-size: 10px;
+}
+
+.smart-score {
+    color: var(--brand-700);
+    font-size: 12px;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+}
+
+/* =========================================================
+   EMPTY STATE
+   ========================================================= */
+
+.dashboard-empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 13px;
+    min-height: 125px;
+    padding: 24px;
+}
+
+.dashboard-empty > i {
+    color: var(--ink-600);
+    font-size: 20px;
+}
+
+.dashboard-empty strong {
+    display: block;
+    margin-bottom: 3px;
+    color: var(--ink-900);
+    font-size: 12.5px;
+    font-weight: 700;
+}
+
+.dashboard-empty p {
+    margin: 0;
+    color: var(--ink-600);
+    font-size: 11px;
+}
+
+/* =========================================================
+   QUICK ACTIONS
+   ========================================================= */
+
+.quick-actions-section {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    margin-top: 22px;
+    padding: 18px 20px;
+    background: var(--surface);
+    border: 1px solid var(--ink-300);
+    border-radius: var(--radius-lg);
+}
+
+.quick-actions-section h3 {
+    margin: 0 0 3px;
+    color: var(--ink-900);
+    font-size: 13.5px;
+    font-weight: 700;
+}
+
+.quick-actions-section p {
+    margin: 0;
+    color: var(--ink-600);
+    font-size: 10.5px;
+}
+
+.quick-actions-grid {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 1100px) {
+    .dashboard-summary {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .summary-item:nth-child(2) {
+        border-right: 0;
+    }
+
+    .summary-item:nth-child(1),
+    .summary-item:nth-child(2) {
+        border-bottom: 1px solid var(--ink-300);
+    }
+
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 760px) {
+    .dashboard-page-header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .dashboard-period {
+        text-align: left;
+    }
+
+    .workflow-item {
+        grid-template-columns: 34px minmax(0, 1fr);
+    }
+
+    .workflow-side {
+        grid-column: 2;
+        text-align: left;
+    }
+
+    .quick-actions-section {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .quick-actions-grid {
+        justify-content: flex-start;
+    }
+}
+
+@media (max-width: 560px) {
+    .dashboard-summary {
+        grid-template-columns: 1fr;
+    }
+
+    .summary-item {
+        border-right: 0 !important;
+        border-bottom: 1px solid var(--ink-300);
+    }
+
+    .summary-item:last-child {
+        border-bottom: 0;
+    }
+
+    .section-head {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .quick-actions-grid {
+        width: 100%;
+    }
+
+    .quick-actions-grid .btn {
+        width: 100%;
+    }
+}

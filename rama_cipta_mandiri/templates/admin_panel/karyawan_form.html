@@ -1,0 +1,397 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    {% if mode == 'create' %}Tambah Karyawan{% else %}Edit Karyawan{% endif %}
+{% endblock %}
+
+{% block extra_css %}
+<style>
+.karyawan-form-page {
+    width: 100%;
+    max-width: 720px;
+    margin: 0 auto;
+}
+
+/* HEADER */
+.karyawan-form-header {
+    margin-bottom: 18px;
+}
+
+.karyawan-form-header h1 {
+    margin-bottom: 5px;
+}
+
+.karyawan-form-header p {
+    margin: 0;
+    color: var(--ink-600);
+    font-size: 13.5px;
+    line-height: 1.5;
+}
+
+/* INFO */
+.karyawan-info {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    margin-bottom: 20px;
+    padding: 15px 17px;
+    background: #EFF6FF;
+    border: 1px solid #BFDBFE;
+    border-radius: var(--radius-lg);
+}
+
+.karyawan-info-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 38px;
+    width: 38px;
+    height: 38px;
+    background: var(--brand-100);
+    border-radius: 10px;
+    color: var(--brand-700);
+    font-size: 16px;
+    font-weight: 700;
+}
+
+.karyawan-info-content h3 {
+    margin: 0 0 4px;
+    color: var(--ink-900);
+    font-size: 13.5px;
+    font-weight: 700;
+}
+
+.karyawan-info-content p {
+    margin: 0;
+    color: var(--ink-600);
+    font-size: 12.5px;
+    line-height: 1.5;
+}
+
+/* FORM CONTAINER */
+.karyawan-form-container {
+    width: 100%;
+    padding: 26px 28px;
+    background: var(--surface);
+    border: 1px solid var(--ink-300);
+    border-radius: var(--radius-lg);
+}
+
+/* SECTION */
+.form-section + .form-section {
+    margin-top: 26px;
+    padding-top: 24px;
+    border-top: 1px solid var(--ink-300);
+}
+
+.form-section-header {
+    margin-bottom: 18px;
+}
+
+.form-section-header h3 {
+    margin: 0 0 4px;
+    color: var(--ink-900);
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.form-section-header p {
+    margin: 0;
+    color: var(--ink-600);
+    font-size: 12px;
+    line-height: 1.45;
+}
+
+/* FORM */
+.karyawan-form .form-group {
+    margin-bottom: 18px;
+}
+
+.karyawan-form .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+.karyawan-form .form-row .form-group {
+    min-width: 0;
+}
+
+.karyawan-form .form-group > label {
+    display: block;
+    margin-bottom: 7px;
+    color: var(--ink-900);
+    font-size: 12.5px;
+    font-weight: 600;
+}
+
+/* INPUT */
+.karyawan-form input:not([type="checkbox"]),
+.karyawan-form select {
+    width: 100%;
+    min-height: 42px;
+    padding: 9px 12px;
+    border: 1px solid var(--ink-300);
+    border-radius: var(--radius-md);
+    background: var(--surface);
+    color: var(--ink-900);
+    font-family: var(--font-body);
+    font-size: 13.5px;
+    transition: border-color .15s ease, box-shadow .15s ease;
+}
+
+.karyawan-form input:not([type="checkbox"]):hover,
+.karyawan-form select:hover {
+    border-color: #CBD5E1;
+}
+
+.karyawan-form input:not([type="checkbox"]):focus,
+.karyawan-form select:focus {
+    outline: none;
+    border-color: var(--brand-500);
+    box-shadow: 0 0 0 3px var(--brand-100);
+}
+
+/* CHECKBOX */
+.status-box {
+    display: flex;
+    align-items: center;
+    min-height: 42px;
+    padding: 0 12px;
+    border: 1px solid var(--ink-300);
+    border-radius: var(--radius-md);
+    background: #F8FAFC;
+}
+
+.status-box label {
+    display: flex !important;
+    align-items: center;
+    gap: 9px;
+    margin: 0 !important;
+    color: var(--ink-900);
+    font-size: 13px !important;
+    font-weight: 500 !important;
+    cursor: pointer;
+}
+
+.status-box input[type="checkbox"] {
+    width: 17px;
+    height: 17px;
+    margin: 0;
+    accent-color: var(--brand-600);
+    cursor: pointer;
+}
+
+/* HINT / ERROR */
+.field-hint {
+    margin: 6px 0 0;
+    color: var(--ink-600);
+    font-size: 11.5px;
+    line-height: 1.45;
+}
+
+.field-error {
+    margin-top: 5px;
+    color: var(--status-sangat-kurang);
+    font-size: 11.5px;
+    line-height: 1.4;
+}
+
+.stat-hint {
+    color: var(--ink-600);
+    font-size: 11px;
+    font-weight: 400;
+}
+
+/* LOGIN NOTICE */
+.login-notice {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 18px;
+    padding: 11px 13px;
+    background: #F8FAFC;
+    border: 1px solid var(--ink-300);
+    border-radius: var(--radius-md);
+    color: var(--ink-600);
+    font-size: 11.5px;
+    line-height: 1.5;
+}
+
+.login-notice strong {
+    color: var(--ink-900);
+}
+
+/* ACTION */
+.karyawan-form-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 26px;
+    padding-top: 20px;
+    border-top: 1px solid var(--ink-300);
+}
+
+@media (max-width: 700px) {
+    .karyawan-form-page {
+        max-width: 100%;
+    }
+
+    .karyawan-form-container {
+        padding: 20px;
+    }
+
+    .karyawan-form .form-row {
+        grid-template-columns: 1fr;
+        gap: 0;
+    }
+
+    .karyawan-info {
+        padding: 14px;
+    }
+
+    .karyawan-form-actions {
+        flex-direction: column-reverse;
+    }
+
+    .karyawan-form-actions .btn {
+        width: 100%;
+    }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="karyawan-form-page">
+
+    <div class="page-header karyawan-form-header">
+        <h1>{% if mode == 'create' %}Tambah Karyawan{% else %}Edit Karyawan{% endif %}</h1>
+        <p>
+            {% if mode == 'create' %}
+                Tambahkan data karyawan yang akan mengikuti proses penilaian kinerja.
+            {% else %}
+                Perbarui informasi dan pengaturan akun <strong>{{ karyawan.nama }}</strong>.
+            {% endif %}
+        </p>
+    </div>
+
+    <div class="karyawan-info">
+        <div class="karyawan-info-icon">i</div>
+        <div class="karyawan-info-content">
+            <h3>Data Karyawan</h3>
+            <p>Data yang tersimpan akan digunakan pada proses absensi, penilaian, perhitungan SMART, dan hasil peringkat karyawan.</p>
+        </div>
+    </div>
+
+    <div class="karyawan-form-container">
+        <form method="post" novalidate class="karyawan-form">
+            {% csrf_token %}
+
+            {% if form.non_field_errors %}
+                <div class="alert alert-error">{{ form.non_field_errors }}</div>
+            {% endif %}
+
+            <div class="form-section">
+    <div class="form-section-header">
+        <h3>Informasi Karyawan</h3>
+        <p>Lengkapi identitas dan informasi pekerjaan karyawan.</p>
+    </div>
+
+    <div class="form-row">
+        <div class="form-group">
+            <label for="{{ form.nama.id_for_label }}">Nama Karyawan</label>
+            {{ form.nama }}
+            {% if form.nama.errors %}
+                <div class="field-error">{{ form.nama.errors|join:", " }}</div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label for="{{ form.jabatan.id_for_label }}">Jabatan</label>
+            {{ form.jabatan }}
+            {% if form.jabatan.errors %}
+                <div class="field-error">{{ form.jabatan.errors|join:", " }}</div>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="form-row">
+        <div class="form-group">
+            <label for="{{ form.tanggal_masuk.id_for_label }}">Tanggal Masuk</label>
+            {{ form.tanggal_masuk }}
+            {% if form.tanggal_masuk.errors %}
+                <div class="field-error">{{ form.tanggal_masuk.errors|join:", " }}</div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label>Status Karyawan</label>
+            <div class="status-box">
+                <label for="{{ form.aktif.id_for_label }}">
+                    {{ form.aktif }}
+                    Karyawan Aktif
+                </label>
+            </div>
+            {% if form.aktif.errors %}
+                <div class="field-error">{{ form.aktif.errors|join:", " }}</div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+            <div class="form-section">
+                <div class="form-section-header">
+                    <h3>Akun Login</h3>
+                    <p>Akun bersifat opsional dan hanya diperlukan jika karyawan membutuhkan akses ke dalam sistem.</p>
+                </div>
+
+                <div class="login-notice">
+                    <div>
+                        <strong>Tidak wajib diisi.</strong>
+                        {% if mode == 'create' %}
+                            Kosongkan username dan password jika karyawan tidak memerlukan akun login.
+                        {% else %}
+                            Kosongkan password jika tidak ingin mengganti password akun yang sudah ada.
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="{{ form.username.id_for_label }}">Username</label>
+                        {{ form.username }}
+                        {% if form.username.errors %}
+                            <div class="field-error">{{ form.username.errors|join:", " }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="{{ form.password.id_for_label }}">
+                            Password
+                            {% if mode == 'update' %}
+                                <span class="stat-hint">(opsional)</span>
+                            {% endif %}
+                        </label>
+                        {{ form.password }}
+                        {% if form.password.errors %}
+                            <div class="field-error">{{ form.password.errors|join:", " }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                {% if form.username.help_text %}
+                    <p class="field-hint">{{ form.username.help_text }}</p>
+                {% endif %}
+            </div>
+
+            <div class="form-actions karyawan-form-actions">
+                <a href="{% url 'karyawan_list' %}" class="btn btn-outline">Batal</a>
+                <button type="submit" class="btn btn-primary">
+                    {% if mode == 'create' %}Simpan Karyawan{% else %}Simpan Perubahan{% endif %}
+                </button>
+            </div>
+        </form>
+    </div>
+
+</div>
+{% endblock %}

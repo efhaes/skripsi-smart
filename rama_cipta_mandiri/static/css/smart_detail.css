@@ -1,0 +1,147 @@
+/* =========================================================
+   SMART DETAIL
+========================================================= */
+
+.smart-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.smart-content {
+    width: 100%;
+}
+
+/* =========================================================
+   STEP
+========================================================= */
+
+.step-section {
+    padding: 28px 0 32px;
+    border-bottom: 1px solid var(--ink-300);
+}
+
+.step-section:first-child {
+    padding-top: 8px;
+}
+
+.step-section-last {
+    border-bottom: 0;
+}
+
+.step-heading {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.step-number {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 28px;
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    background: var(--brand-100);
+    color: var(--brand-700);
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.step-heading h2 {
+    margin: 2px 0 4px;
+    color: var(--ink-900);
+    font-size: 15px;
+    font-weight: 650;
+    line-height: 1.35;
+}
+
+.step-heading p {
+    margin: 0;
+    color: var(--ink-600);
+    font-size: 12.5px;
+    line-height: 1.5;
+}
+
+/* =========================================================
+   TABLE
+========================================================= */
+
+.table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    border: 1px solid var(--ink-300);
+    border-radius: 8px;
+    background: var(--surface);
+}
+
+.matrix-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 620px;
+}
+
+.matrix-table th {
+    padding: 10px 12px;
+    background: var(--ink-100);
+    border-bottom: 1px solid var(--ink-300);
+    color: var(--ink-600);
+    font-size: 11.5px;
+    font-weight: 600;
+    text-align: center;
+    white-space: nowrap;
+}
+
+.matrix-table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--ink-300);
+    color: var(--ink-900);
+    font-size: 12.5px;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.matrix-table tbody tr:last-child td {
+    border-bottom: 0;
+}
+
+.matrix-table tbody tr:hover {
+    background: var(--ink-100);
+}
+
+.matrix-table th:first-child,
+.matrix-table td:first-child {
+    text-align: left;
+}
+
+.matrix-table td:first-child {
+    font-weight: 500;
+}
+
+.total-value {
+    font-weight: 700;
+    color: var(--brand-700);
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 768px) {
+    .smart-header {
+        align-items: flex-start;
+    }
+
+    .step-section {
+        padding: 22px 0 26px;
+    }
+
+    .matrix-table th,
+    .matrix-table td {
+        padding: 9px 10px;
+    }
+}

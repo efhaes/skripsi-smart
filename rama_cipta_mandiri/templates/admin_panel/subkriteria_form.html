@@ -1,0 +1,376 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    {% if mode == 'create' %}Tambah Sub Kriteria{% else %}Edit Sub Kriteria{% endif %}
+{% endblock %}
+
+{% block content %}
+
+<div class="subkriteria-form-page">
+
+    <!-- PAGE HEADER -->
+    <div class="page-header subkriteria-form-header">
+        <h1>
+            {% if mode == 'create' %}
+                Tambah Sub Kriteria
+            {% else %}
+                Edit Sub Kriteria
+            {% endif %}
+        </h1>
+
+        <p>
+            {% if mode == 'create' %}
+                Tambahkan opsi penilaian baru untuk kriteria yang dipilih.
+            {% else %}
+                Perbarui data <strong>{{ subkriteria.nama }}</strong>
+                pada kriteria {{ subkriteria.kriteria.kode }}.
+            {% endif %}
+        </p>
+    </div>
+
+
+    <!-- FORM -->
+    <div class="subkriteria-form-container">
+
+        <form method="post" novalidate class="subkriteria-form">
+            {% csrf_token %}
+
+            {% if form.non_field_errors %}
+                <div class="alert alert-error">
+                    {{ form.non_field_errors }}
+                </div>
+            {% endif %}
+
+
+            <!-- KRITERIA -->
+            <div class="form-group">
+                <label for="{{ form.kriteria.id_for_label }}">
+                    Kriteria
+                </label>
+
+                {{ form.kriteria }}
+
+                {% if form.kriteria.errors %}
+                    <div class="field-error">
+                        {{ form.kriteria.errors|join:", " }}
+                    </div>
+                {% endif %}
+
+                <p class="field-hint">
+                    Pilih kriteria yang akan memiliki opsi penilaian ini.
+                </p>
+            </div>
+
+
+            <!-- NAMA OPSI -->
+            <div class="form-group">
+                <label for="{{ form.nama.id_for_label }}">
+                    Nama Opsi
+                </label>
+
+                {{ form.nama }}
+
+                {% if form.nama.errors %}
+                    <div class="field-error">
+                        {{ form.nama.errors|join:", " }}
+                    </div>
+                {% endif %}
+
+                <p class="field-hint">
+                    Contoh: Sangat Baik, Baik, Cukup, Kurang, atau Sangat Kurang.
+                </p>
+            </div>
+
+
+            <!-- NILAI + RANGE -->
+            <div class="form-row">
+
+                <div class="form-group">
+                    <label for="{{ form.nilai.id_for_label }}">
+                        Nilai
+                    </label>
+
+                    {{ form.nilai }}
+
+                    {% if form.nilai.errors %}
+                        <div class="field-error">
+                            {{ form.nilai.errors|join:", " }}
+                        </div>
+                    {% endif %}
+
+                    <p class="field-hint">
+                        Nilai yang digunakan dalam proses penilaian.
+                    </p>
+                </div>
+
+
+                <div class="form-group">
+                    <label for="{{ form.range_nilai.id_for_label }}">
+                        Range Nilai
+                    </label>
+
+                    {{ form.range_nilai }}
+
+                    {% if form.range_nilai.errors %}
+                        <div class="field-error">
+                            {{ form.range_nilai.errors|join:", " }}
+                        </div>
+                    {% endif %}
+
+                    <p class="field-hint">
+                        Contoh: 0-1, 2-3, atau 95-100.
+                    </p>
+                </div>
+
+            </div>
+
+
+            <!-- ACTION -->
+            <div class="form-actions subkriteria-form-actions">
+
+                <a
+                    href="{% url 'subkriteria_list' %}"
+                    class="btn btn-outline"
+                >
+                    Batal
+                </a>
+
+                <button
+                    type="submit"
+                    class="btn btn-primary"
+                >
+                    {% if mode == 'create' %}
+                        Simpan Sub Kriteria
+                    {% else %}
+                        Simpan Perubahan
+                    {% endif %}
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}
+
+
+{% block extra_css %}
+
+<style>
+
+/* =========================================================
+   PAGE
+   ========================================================= */
+
+.subkriteria-form-page {
+    width: 100%;
+}
+
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.subkriteria-form-header {
+    width: 100%;
+    max-width: 620px;
+
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 22px;
+}
+
+.subkriteria-form-header h1 {
+    margin-bottom: 6px;
+}
+
+.subkriteria-form-header p {
+    max-width: 560px;
+}
+
+
+/* =========================================================
+   FORM CONTAINER
+   ========================================================= */
+
+.subkriteria-form-container {
+    width: 100%;
+    max-width: 620px;
+
+    margin: 0 auto;
+
+    padding: 26px 28px;
+
+    background: var(--surface);
+
+    border: 1px solid var(--ink-300);
+    border-radius: var(--radius-lg);
+}
+
+
+/* =========================================================
+   FORM
+   ========================================================= */
+
+.subkriteria-form {
+    width: 100%;
+}
+
+.subkriteria-form .form-group {
+    margin-bottom: 20px;
+}
+
+.subkriteria-form .form-group > label {
+    display: block;
+
+    margin-bottom: 7px;
+
+    color: var(--ink-900);
+
+    font-size: 12.5px;
+    font-weight: 600;
+}
+
+
+/* =========================================================
+   INPUT / SELECT
+   ========================================================= */
+
+.subkriteria-form input,
+.subkriteria-form select,
+.subkriteria-form textarea {
+    width: 100%;
+    min-height: 42px;
+
+    padding: 9px 12px;
+
+    border: 1px solid var(--ink-300);
+    border-radius: var(--radius-md);
+
+    background: var(--surface);
+    color: var(--ink-900);
+
+    font-family: var(--font-body);
+    font-size: 13.5px;
+
+    transition:
+        border-color 0.15s ease,
+        box-shadow 0.15s ease;
+}
+
+.subkriteria-form input:hover,
+.subkriteria-form select:hover,
+.subkriteria-form textarea:hover {
+    border-color: #CBD5E1;
+}
+
+.subkriteria-form input:focus,
+.subkriteria-form select:focus,
+.subkriteria-form textarea:focus {
+    outline: none;
+
+    border-color: var(--brand-500);
+    box-shadow: 0 0 0 3px var(--brand-100);
+}
+
+
+/* =========================================================
+   NILAI + RANGE
+   ========================================================= */
+
+.subkriteria-form .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+
+    gap: 16px;
+}
+
+.subkriteria-form .form-row .form-group {
+    min-width: 0;
+}
+
+
+/* =========================================================
+   HINT
+   ========================================================= */
+
+.field-hint {
+    margin: 6px 0 0;
+
+    color: var(--ink-600);
+
+    font-size: 11.5px;
+    line-height: 1.45;
+}
+
+
+/* =========================================================
+   ERROR
+   ========================================================= */
+
+.field-error {
+    margin-top: 5px;
+
+    color: var(--status-sangat-kurang);
+
+    font-size: 11.5px;
+    line-height: 1.4;
+}
+
+
+/* =========================================================
+   ACTION
+   ========================================================= */
+
+.subkriteria-form-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+
+    gap: 10px;
+
+    margin-top: 6px;
+    padding-top: 20px;
+
+    border-top: 1px solid var(--ink-300);
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 700px) {
+
+    .subkriteria-form-header {
+        max-width: 100%;
+    }
+
+    .subkriteria-form-container {
+        max-width: 100%;
+
+        padding: 20px;
+
+        border-radius: var(--radius-md);
+    }
+
+    .subkriteria-form .form-row {
+        grid-template-columns: 1fr;
+        gap: 0;
+    }
+
+    .subkriteria-form-actions {
+        flex-direction: column-reverse;
+    }
+
+    .subkriteria-form-actions .btn {
+        width: 100%;
+    }
+}
+
+</style>
+
+{% endblock %}

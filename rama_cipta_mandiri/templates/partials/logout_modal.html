@@ -1,0 +1,13 @@
+<div id="logoutModal" class="modal-overlay">
+    <div class="modal-box">
+        <h3>Konfirmasi Logout</h3>
+        <p>Apakah Anda yakin ingin keluar dari sistem?</p>
+        <div class="modal-actions">
+            <button type="button" class="btn btn-outline" onclick="closeLogoutModal()">Batal</button>
+            <form action="{% url 'logout' %}" method="post" style="display:inline;">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger">Ya, Logout</button>
+            </form>
+        </div>
+    </div>
+</div>

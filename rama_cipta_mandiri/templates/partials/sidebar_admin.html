@@ -1,0 +1,60 @@
+<div class="sidebar">
+    <a href="{% url 'dashboard_admin' %}"
+       class="sidebar-link sidebar-link-primary {% if request.resolver_match.url_name == 'dashboard_admin' %}active{% endif %}">
+        <span class="icon"><i class="fa-solid fa-gauge-high"></i></span>
+        Dashboard
+    </a>
+
+    <div class="sidebar-divider"></div>
+
+    <div class="sidebar-step">
+        <span class="sidebar-step-number">1</span>
+        <span class="sidebar-step-label">Master Data</span>
+    </div>
+
+    <a href="{% url 'karyawan_list' %}"
+       class="sidebar-link {% if request.resolver_match.url_name == 'karyawan_list' or request.resolver_match.url_name == 'karyawan_create' or request.resolver_match.url_name == 'karyawan_update' or request.resolver_match.url_name == 'karyawan_delete' %}active{% endif %}">
+        <span class="icon"><i class="fa-solid fa-users"></i></span>
+        Karyawan
+    </a>
+
+    <a href="{% url 'kriteria_list' %}"
+       class="sidebar-link {% if request.resolver_match.url_name == 'kriteria_list' or request.resolver_match.url_name == 'kriteria_create' or request.resolver_match.url_name == 'kriteria_update' or request.resolver_match.url_name == 'kriteria_delete' %}active{% endif %}">
+        <span class="icon"><i class="fa-solid fa-list-check"></i></span>
+        Kriteria
+    </a>
+
+    <a href="{% url 'subkriteria_list' %}"
+       class="sidebar-link {% if request.resolver_match.url_name == 'subkriteria_list' or request.resolver_match.url_name == 'subkriteria_create' or request.resolver_match.url_name == 'subkriteria_update' or request.resolver_match.url_name == 'subkriteria_delete' %}active{% endif %}">
+        <span class="icon"><i class="fa-solid fa-layer-group"></i></span>
+        Sub Kriteria
+    </a>
+
+    <div class="sidebar-step">
+        <span class="sidebar-step-number">2</span>
+        <span class="sidebar-step-label">Data Karyawan</span>
+    </div>
+
+    <a href="{% url 'absensi_bulanan' %}"
+       class="sidebar-link {% if request.resolver_match.url_name == 'absensi_bulanan' %}active{% endif %}">
+        <span class="icon"><i class="fa-solid fa-calendar-check"></i></span>
+        Absensi
+    </a>
+
+    <div class="sidebar-step">
+        <span class="sidebar-step-number">3</span>
+        <span class="sidebar-step-label">Proses &amp; Laporan</span>
+    </div>
+
+    <a href="{% url 'penilaian_list' %}"
+       class="sidebar-link {% if request.resolver_match.url_name == 'penilaian_list' or request.resolver_match.url_name == 'penilaian_form' or request.resolver_match.url_name == 'penilaian_form_periode' %}active{% endif %}">
+        <span class="icon"><i class="fa-solid fa-clipboard-list"></i></span>
+        Penilaian
+    </a>
+
+    <a href="{% url 'smart_list' %}"
+       class="sidebar-link {% if request.resolver_match.url_name == 'smart_list' or request.resolver_match.url_name == 'smart_proses_form' or request.resolver_match.url_name == 'hasil_smart' %}active{% endif %}">
+        <span class="icon"><i class="fa-solid fa-gears"></i></span>
+        Proses SMART
+    </a>
+</div>

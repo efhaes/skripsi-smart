@@ -1,0 +1,122 @@
+{% extends 'base.html' %}
+{% block title %}Hasil SMART - {{ periode }}{% endblock %}
+
+{% block extra_css %}
+<style>
+    .ranking-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+    .rank-badge {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 28px; height: 28px;
+        border-radius: 50%;
+        background: var(--brand-100);
+        color: var(--brand-700);
+        font-weight: 700;
+        font-size: 13px;
+    }
+    .rank-badge.top3 {
+        background: var(--brand-700);
+        color: #fff;
+    }
+    .detail-toggle {
+        cursor: pointer;
+        color: var(--brand-700);
+        font-size: 12.5px;
+        font-weight: 600;
+    }
+    .detail-row { display: none; background: var(--bg); }
+    .detail-row.show { display: table-row; }
+    .detail-row td { padding: 16px 20px; }
+    .detail-mini-table { width: 100%; font-size: 12.5px; }
+    .detail-mini-table th { background: transparent; color: var(--ink-600); font-size: 11px; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div class="ranking-header">
+        <div>
+            <h1>Hasil Ranking SMART</h1>
+            <p>Periode: {{ periode }}</p>
+        </div>
+        <a href="{% url 'smart_detail' periode.id %}" class="btn btn-outline">Lihat Tahapan Perhitungan Lengkap</a>
+    </div>
+</div>
+
+<div class="card">
+    <table>
+        <thead>
+            <tr>
+                <th>Rank</th>
+                <th>Kode</th>
+                <th>Nama Karyawan</th>
+                <th>Jabatan</th>
+                <th>Total Nilai</th>
+                <th>Predikat</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for h in hasil %}
+            <tr>
+                <td><span class="rank-badge {% if h.ranking <= 3 %}top3{% endif %}">{{ h.ranking }}</span></td>
+                <td>{{ h.kode }}</td>
+                <td>{{ h.nama }}</td>
+                <td>{{ h.jabatan|default:"-" }}</td>
+                <td>{{ h.total_nilai|floatformat:4 }}</td>
+                <td><span class="badge badge-{{ h.predikat|slugify }}">{{ h.predikat }}</span></td>
+                <td><span class="detail-toggle" onclick="toggleDetail({{ forloop.counter }})">Lihat Detail</span></td>
+            </tr>
+            <tr class="detail-row" id="detail-{{ forloop.counter }}">
+                <td colspan="8">
+                    <table class="detail-mini-table">
+                        <thead>
+                            <tr>
+                                <th>Kriteria</th>
+                                <th>Bobot Ternormalisasi</th>
+                                <th>Nilai Raw</th>
+                                <th>Nilai Utility</th>
+                                <th>Nilai Akhir (Bobot × Utility)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for d in h.detail_kriteria %}
+                            <tr>
+                                <td>{{ d.kriteria_kode }} - {{ d.kriteria_nama }}</td>
+                                <td>{{ d.bobot_ternormalisasi|floatformat:4 }}</td>
+                                <td>{{ d.nilai_raw|default_if_none:"-" }}</td>
+                                <td>{{ d.nilai_utility|floatformat:4 }}</td>
+                                <td>{{ d.nilai_akhir_kriteria|floatformat:4 }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="8" style="text-align:center; padding: 24px; color: var(--ink-600);">
+                    Belum ada hasil untuk periode ini.
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    function toggleDetail(id) {
+        document.getElementById('detail-' + id).classList.toggle('show');
+    }
+</script>
+{% endblock %}

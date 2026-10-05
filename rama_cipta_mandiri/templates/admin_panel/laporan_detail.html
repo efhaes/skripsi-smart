@@ -1,0 +1,192 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Tahapan Perhitungan SMART - {{ periode }}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/smart_detail.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="page-header smart-header">
+    <div>
+        <h1>Tahapan Perhitungan SMART</h1>
+        <p>Periode: {{ periode }}</p>
+    </div>
+    <a href="{% url 'smart_pdf' periode.id %}" class="btn btn-primary">Unduh PDF</a>
+</div>
+
+<div class="smart-content">
+    <!-- STEP 1 -->
+    <section class="step-section">
+        <div class="step-heading">
+            <span class="step-number">1</span>
+            <div>
+                <h2>Bobot Kriteria</h2>
+                <p>Bobot masing-masing kriteria yang digunakan dalam perhitungan.</p>
+            </div>
+        </div>
+
+        <div class="table-wrapper">
+            <table class="matrix-table">
+                <thead>
+                    <tr>
+                        <th>Kode</th>
+                        <th>Nama Kriteria</th>
+                        <th>Tipe</th>
+                        <th>Bobot (%)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for k in daftar_kriteria %}
+                    <tr>
+                        <td>{{ k.kode }}</td>
+                        <td>{{ k.nama }}</td>
+                        <td>{{ k.get_tipe_display }}</td>
+                        <td>{{ k.bobot }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- STEP 2 -->
+    <section class="step-section">
+        <div class="step-heading">
+            <span class="step-number">2</span>
+            <div>
+                <h2>Matriks Keputusan (Nilai Awal)</h2>
+                <p>Nilai mentah setiap karyawan pada setiap kriteria sebelum dinormalisasi.</p>
+            </div>
+        </div>
+
+        <div class="table-wrapper">
+            <table class="matrix-table">
+                <thead>
+                    <tr>
+                        <th>Karyawan</th>
+                        {% for k in daftar_kriteria %}
+                        <th>{{ k.kode }}</th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for h in hasil_matrix %}
+                    <tr>
+                        <td>{{ h.nama }}</td>
+                        {% for cell in h.matrix %}
+                        <td>{{ cell.nilai_raw|default_if_none:"-" }}</td>
+                        {% endfor %}
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- STEP 3 -->
+    <section class="step-section">
+        <div class="step-heading">
+            <span class="step-number">3</span>
+            <div>
+                <h2>Normalisasi (Nilai Utility)</h2>
+                <p>Benefit: (x - min) / (max - min). Cost: (max - x) / (max - min).</p>
+            </div>
+        </div>
+
+        <div class="table-wrapper">
+            <table class="matrix-table">
+                <thead>
+                    <tr>
+                        <th>Karyawan</th>
+                        {% for k in daftar_kriteria %}
+                        <th>{{ k.kode }}</th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for h in hasil_matrix %}
+                    <tr>
+                        <td>{{ h.nama }}</td>
+                        {% for cell in h.matrix %}
+                        <td>{{ cell.nilai_utility|floatformat:4 }}</td>
+                        {% endfor %}
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- STEP 4 -->
+    <section class="step-section">
+        <div class="step-heading">
+            <span class="step-number">4</span>
+            <div>
+                <h2>Nilai Akhir per Kriteria</h2>
+                <p>Bobot ternormalisasi dikalikan dengan nilai utility setiap kriteria.</p>
+            </div>
+        </div>
+
+        <div class="table-wrapper">
+            <table class="matrix-table">
+                <thead>
+                    <tr>
+                        <th>Karyawan</th>
+                        {% for k in daftar_kriteria %}
+                        <th>{{ k.kode }}</th>
+                        {% endfor %}
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for h in hasil_matrix %}
+                    <tr>
+                        <td>{{ h.nama }}</td>
+                        {% for cell in h.matrix %}
+                        <td>{{ cell.nilai_akhir_kriteria|floatformat:4 }}</td>
+                        {% endfor %}
+                        <td class="total-value">{{ h.total_nilai|floatformat:4 }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- STEP 5 -->
+    <section class="step-section step-section-last">
+        <div class="step-heading">
+            <span class="step-number">5</span>
+            <div>
+                <h2>Hasil Ranking Akhir</h2>
+                <p>Urutan hasil akhir berdasarkan total nilai SMART setiap karyawan.</p>
+            </div>
+        </div>
+
+        <div class="table-wrapper">
+            <table class="matrix-table">
+                <thead>
+                    <tr>
+                        <th>Rank</th>
+                        <th>Karyawan</th>
+                        <th>Total Nilai</th>
+                        <th>Predikat</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for h in hasil_ranking %}
+                    <tr>
+                        <td>{{ h.ranking }}</td>
+                        <td>{{ h.nama }}</td>
+                        <td class="total-value">{{ h.total_nilai|floatformat:4 }}</td>
+                        <td>{{ h.predikat }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+</div>
+{% endblock %}

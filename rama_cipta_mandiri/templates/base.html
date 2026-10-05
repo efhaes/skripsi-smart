@@ -1,0 +1,88 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}SPK Penilaian Karyawan{% endblock %} - PT. Rama Cipta Mandiri</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Zilla+Slab:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+
+    <div class="topbar">
+        <div class="topbar-brand">
+                {% if user.is_authenticated %}
+                    <button type="button" class="topbar-menu-toggle" onclick="toggleSidebar()">
+                        <i class="fa-solid fa-bars"></i>
+                    </button>
+                {% endif %}
+
+                <div class="topbar-logo">
+                    <img src="{% static 'img/logo-rcm.jpeg' %}" alt="PT. Rama Cipta Mandiri">
+                </div>
+
+                <div class="topbar-brand-divider"></div>
+
+                <div class="topbar-app-name">
+                    <span>SPK Penilaian Karyawan</span>
+                    <small>PT. Rama Cipta Mandiri</small>
+                </div>
+            </div>
+        {% if user.is_authenticated %}
+        <div class="topbar-user">
+            <span class="role-badge">{% if user.is_superuser %}Admin{% else %}Karyawan{% endif %}</span>
+            <span class="username">{{ user.get_full_name|default:user.username }}</span>
+            <button type="button" class="logout-btn" onclick="openLogoutModal()">Logout</button>
+        </div>
+        {% endif %}
+    </div>
+
+    {% if user.is_authenticated %}
+        {% if user.is_superuser %}
+            {% include 'partials/sidebar_admin.html' %}
+        {% else %}
+            {% include 'partials/sidebar_karyawan.html' %}
+        {% endif %}
+    {% endif %}
+
+    <div class="main-content">
+        <div class="messages">
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        </div>
+
+        {% block content %}{% endblock %}
+    </div>
+
+    {% block extra_js %}{% endblock %}
+
+    {% if user.is_authenticated %}
+    {% include 'partials/logout_modal.html' %}
+    {% endif %}
+
+    <script>
+        function openLogoutModal() {
+            document.getElementById('logoutModal').classList.add('show');
+        }
+        function closeLogoutModal() {
+            document.getElementById('logoutModal').classList.remove('show');
+        }
+        function toggleSidebar() {
+            document.querySelector('.sidebar').classList.toggle('open');
+        }
+        // Klik di luar box juga nutup modal
+        document.getElementById('logoutModal')?.addEventListener('click', function(e) {
+            if (e.target === this) closeLogoutModal();
+        });
+    </script>
+</body>
+</html>

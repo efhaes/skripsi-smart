@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Riwayat Penilaian Saya{% endblock %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/karyawan_portal.css' %}">
+<link rel="stylesheet" href="{% static 'css/riwayat.css' %}">
+{% endblock %}
+{% block content %}
+<div class="karyawan-portal">
+<div class="page-header-row">
+    <div class="page-header"><h1>Riwayat Penilaian</h1><p>{{ karyawan.nama }} &middot; Hasil penilaian tahun {{ tahun_dipilih }}.</p></div>
+    <form method="get" class="karyawan-filter">
+        <div class="form-group">
+            <label for="tahun">Tahun</label>
+            <select name="tahun" id="tahun">
+                {% for th in daftar_tahun %}
+                <option value="{{ th }}" {% if th == tahun_dipilih %}selected{% endif %}>{{ th }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <button class="btn btn-primary" type="submit">Tampilkan</button>
+    </form>
+</div>
+<div class="card table-card"><div class="table-scroll" tabindex="0" role="region" aria-label="Riwayat penilaian"><table>
+    <thead>
+        <tr>
+            <th scope="col">Periode</th>
+            <th scope="col" class="karyawan-numeric">Total Nilai</th>
+            <th scope="col" class="karyawan-numeric">Ranking</th>
+            <th scope="col">Predikat</th>
+            <th scope="col">Perubahan Nilai</th>
+            <th scope="col">Detail</th>
+        </tr>
+    </thead>
+    <tbody>{% for alt in daftar_alternatif %}<tr><td>{{ alt.periode }}</td>
+        {% if alt.hasil %}<td class="karyawan-numeric">{{ alt.hasil.total_nilai|floatformat:4 }}</td><td class="karyawan-numeric">#{{ alt.hasil.ranking }}</td><td><span class="badge badge-{{ alt.hasil.predikat|slugify }}">{{ alt.hasil.predikat }}</span></td>
+        <td>{% if alt.selisih_nilai != None %}{% if alt.selisih_nilai > 0 %}+{% endif %}{{ alt.selisih_nilai|floatformat:4 }}<span class="riwayat-comparison-period">dari {{ alt.periode_sebelumnya }}</span>{% else %}&mdash;{% endif %}</td>
+        {% else %}<td colspan="4" class="karyawan-muted">Belum diproses</td>{% endif %}
+        <td><a href="{% url 'detail_penilaian' alt.pk %}" class="btn btn-outline btn-sm" aria-label="Detail penilaian {{ alt.periode }}">Detail</a></td>
+    </tr>{% empty %}<tr><td colspan="6"><div class="empty-state">Belum ada riwayat penilaian pada tahun ini.</div></td></tr>{% endfor %}</tbody>
+</table></div></div>
+<p class="karyawan-note">Perubahan nilai dibandingkan dengan hasil SMART sebelumnya yang tersedia, termasuk dari tahun sebelumnya.</p>
+</div>
+{% endblock %}

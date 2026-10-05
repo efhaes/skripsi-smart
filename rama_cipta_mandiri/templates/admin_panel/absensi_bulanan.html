@@ -1,0 +1,369 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Absensi Bulanan{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/absensi.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+    <h1>Absensi Bulanan</h1>
+    <p>Isi kehadiran seluruh karyawan aktif untuk periode {{ periode }}.</p>
+</div>
+
+<!-- FILTER -->
+<div class="filter-bar">
+    <form method="get" class="filter-form">
+        <div class="filter-field">
+            <label for="bulan">Bulan</label>
+            <select name="bulan" id="bulan">
+                {% for nilai, label in daftar_bulan %}
+                    <option value="{{ nilai }}" {% if nilai == bulan_dipilih %}selected{% endif %}>
+                        {{ label }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="filter-field">
+            <label for="tahun">Tahun</label>
+            <select name="tahun" id="tahun">
+                {% for tahun_opsi in daftar_tahun %}
+                    <option value="{{ tahun_opsi }}" {% if tahun_opsi == tahun_dipilih %}selected{% endif %}>
+                        {{ tahun_opsi }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-primary">
+            Tampilkan
+        </button>
+    </form>
+</div>
+
+<!-- ABSENSI -->
+<div class="card absensi-card">
+    <form method="post" id="absensiForm">
+        {% csrf_token %}
+
+        <input type="hidden" name="bulan" value="{{ bulan_dipilih }}">
+        <input type="hidden" name="tahun" value="{{ tahun_dipilih }}">
+        <input type="hidden" name="page" value="{{ page_obj.number }}">
+
+        <div class="absensi-table-wrapper">
+            <table class="absensi-table">
+                <thead>
+                    <tr>
+                        <th class="col-nama">
+                            <span>Nama Karyawan</span>
+                        </th>
+
+                        {% for h in header_hari %}
+                        <th class="col-tanggal {% if h.is_weekend %}weekend{% endif %}">
+                            <div class="th-tanggal">
+
+                                <span class="th-hari">
+                                    {{ h.nama_hari }}
+                                </span>
+
+                                <span class="th-nomor">
+                                    {{ h.tanggal }}
+                                </span>
+
+                               {% if not h.is_libur %}
+                                <label
+                                    class="select-all-wrap"
+                                    title="Pilih semua karyawan tanggal {{ h.tanggal }}">
+                                    <input
+                                        type="checkbox"
+                                        class="check-all-kolom"
+                                        data-col="{{ forloop.counter0 }}"
+                                        aria-label="Pilih semua karyawan tanggal {{ h.tanggal }}">
+                                </label>
+                            {% else %}
+                                <span class="libur-header">Libur</span>
+                            {% endif %}
+                            </div>
+                        </th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for row in rows %}
+                    <tr>
+                        <td class="col-nama">
+                            {{ row.karyawan.nama }}
+                        </td>
+
+                        {% for cell in row.cells %}
+                        <td
+                            class="attendance-cell {% if cell.is_weekend %}weekend{% endif %}"
+                            data-col="{{ forloop.counter0 }}"
+                        >
+                            {% if cell.is_libur %}
+                                <span class="libur-label">Libur</span>
+                            {% else %}
+                                <input
+                                    type="checkbox"
+                                    name="{{ cell.name }}"
+                                    {% if cell.checked %}checked{% endif %}
+                                    aria-label="Absensi {{ row.karyawan.nama }}"
+                                >
+                            {% endif %}
+                        </td>
+                        {% endfor %}
+                    </tr>
+
+                    {% empty %}
+                    <tr>
+                        <td
+                            class="empty-row"
+                            colspan="{{ header_hari|length|add:1 }}"
+                        >
+                            Tidak ada karyawan aktif.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- FOOTER -->
+        <div class="table-actions">
+
+            <button type="submit" class="btn btn-primary">
+                Simpan Halaman Ini
+            </button>
+
+            <div class="pagination">
+
+                {% if page_obj.has_previous %}
+                    <a
+                        href="?bulan={{ bulan_dipilih }}&tahun={{ tahun_dipilih }}&page={{ page_obj.previous_page_number }}"
+                        class="nav-link"
+                    >
+                        &laquo; Previous
+                    </a>
+                {% else %}
+                    <span class="disabled">
+                        &laquo; Previous
+                    </span>
+                {% endif %}
+
+                <span class="pagination-info">
+                    Halaman {{ page_obj.number }} dari {{ page_obj.paginator.num_pages }}
+                </span>
+
+                {% if page_obj.has_next %}
+                    <a
+                        href="?bulan={{ bulan_dipilih }}&tahun={{ tahun_dipilih }}&page={{ page_obj.next_page_number }}"
+                        class="nav-link"
+                    >
+                        Next &raquo;
+                    </a>
+                {% else %}
+                    <span class="disabled">
+                        Next &raquo;
+                    </span>
+                {% endif %}
+
+            </div>
+        </div>
+
+    </form>
+</div>
+
+{% endblock %}
+
+
+{% block extra_js %}
+<script>
+(function () {
+    const form = document.getElementById('absensiForm');
+
+    if (!form) return;
+
+    let isDirty = false;
+
+    /*
+     * Tandai halaman memiliki perubahan.
+     */
+    form.addEventListener('change', function (e) {
+        if (
+            e.target.matches(
+                '.absensi-table tbody input[type="checkbox"]'
+            )
+        ) {
+            isDirty = true;
+        }
+    });
+
+    /*
+     * Reset dirty state ketika disimpan.
+     */
+    form.addEventListener('submit', function () {
+        isDirty = false;
+    });
+
+    /*
+     * Warning ketika meninggalkan halaman
+     * sementara perubahan belum disimpan.
+     */
+    window.addEventListener('beforeunload', function (e) {
+        if (!isDirty) return;
+
+        e.preventDefault();
+        e.returnValue = '';
+    });
+
+    /*
+     * Warning ketika pindah pagination.
+     */
+    document
+        .querySelectorAll('.pagination a.nav-link')
+        .forEach(function (link) {
+
+            link.addEventListener('click', function (e) {
+
+                if (!isDirty) return;
+
+                const lanjut = confirm(
+                    'Ada perubahan absensi yang belum disimpan di halaman ini. Tetap pindah halaman?'
+                );
+
+                if (!lanjut) {
+                    e.preventDefault();
+                }
+            });
+        });
+
+
+    /*
+     * SELECT ALL PER TANGGAL
+     *
+     * Checkbox pada header mengontrol seluruh
+     * checkbox karyawan pada kolom tanggal tersebut.
+     */
+    document
+        .querySelectorAll('.check-all-kolom')
+        .forEach(function (headerCheckbox) {
+
+            headerCheckbox.addEventListener(
+                'change',
+                function () {
+
+                    const kolom = this.dataset.col;
+                    const checked = this.checked;
+
+                    document
+                        .querySelectorAll(
+                            '.absensi-table tbody td[data-col="' +
+                            kolom +
+                            '"] input[type="checkbox"]'
+                        )
+                        .forEach(function (checkbox) {
+
+                            checkbox.checked = checked;
+
+                            checkbox.dispatchEvent(
+                                new Event('change', {
+                                    bubbles: true
+                                })
+                            );
+                        });
+                }
+            );
+        });
+
+
+    /*
+     * Sinkronkan status checkbox SELECT ALL.
+     *
+     * Jika semua karyawan pada suatu tanggal
+     * sudah dicentang, checkbox header ikut checked.
+     *
+     * Jika hanya sebagian, tampilkan indeterminate.
+     */
+    function updateHeaderCheckbox(columnIndex) {
+
+        const header = document.querySelector(
+            '.check-all-kolom[data-col="' +
+            columnIndex +
+            '"]'
+        );
+
+        if (!header) return;
+
+        const checkboxes = Array.from(
+            document.querySelectorAll(
+                '.absensi-table tbody td[data-col="' +
+                columnIndex +
+                '"] input[type="checkbox"]'
+            )
+        );
+
+        if (!checkboxes.length) {
+            header.checked = false;
+            header.indeterminate = false;
+            return;
+        }
+
+        const checkedCount = checkboxes.filter(
+            checkbox => checkbox.checked
+        ).length;
+
+        header.checked =
+            checkedCount === checkboxes.length;
+
+        header.indeterminate =
+            checkedCount > 0 &&
+            checkedCount < checkboxes.length;
+    }
+
+
+    /*
+     * Update header ketika checkbox individual berubah.
+     */
+    document
+        .querySelectorAll(
+            '.absensi-table tbody td[data-col] input[type="checkbox"]'
+        )
+        .forEach(function (checkbox) {
+
+            checkbox.addEventListener(
+                'change',
+                function () {
+
+                    const cell = this.closest(
+                        'td[data-col]'
+                    );
+
+                    if (cell) {
+                        updateHeaderCheckbox(
+                            cell.dataset.col
+                        );
+                    }
+                }
+            );
+        });
+
+
+    /*
+     * Initial state.
+     */
+    document
+        .querySelectorAll('.check-all-kolom')
+        .forEach(function (header) {
+            updateHeaderCheckbox(
+                header.dataset.col
+            );
+        });
+
+})();
+</script>
+{% endblock %}

@@ -1,0 +1,80 @@
+/* ==================== STAT SUMMARY BLOCK ==================== */
+.stat-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-bottom: 18px;
+}
+
+.stat-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--ink-600);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.stat-value {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 22px;
+    color: var(--ink-900);
+    margin-top: 4px;
+}
+
+/* ==================== TABLE CONTAINER ==================== */
+.table-card {
+    padding: 0;
+    overflow: hidden;
+}
+
+.table-scroll {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.table-card table {
+    min-width: 640px;
+}
+
+.table-card th:first-child,
+.table-card td:first-child { padding-left: 22px; }
+.table-card th:last-child,
+.table-card td:last-child { padding-right: 22px; }
+
+/* Baris hover selaras dengan aksen biru navigasi */
+.table-card tbody tr:hover { background: var(--brand-100); }
+
+/* ==================== ROW ACTIONS ==================== */
+.table-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.table-actions .btn {
+    padding: 6px 12px;
+    font-size: 12.5px;
+}
+
+/* ==================== EMPTY STATE ==================== */
+.table-empty {
+    text-align: center;
+    color: var(--ink-600);
+    padding: 40px 20px;
+    font-size: 13.5px;
+}
+.table-empty .icon {
+    font-size: 22px;
+    color: var(--ink-300);
+    margin-bottom: 8px;
+    display: block;
+}
+
+@media (max-width: 640px) {
+    .page-header-row {
+        align-items: flex-start;
+    }
+}

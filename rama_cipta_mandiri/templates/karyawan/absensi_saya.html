@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Absensi Saya{% endblock %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/karyawan_portal.css' %}">
+<link rel="stylesheet" href="{% static 'css/absensi_karyawan.css' %}">
+{% endblock %}
+{% block content %}
+<div class="karyawan-portal absensi-saya-portal">
+<div class="page-header-row">
+    <div class="page-header"><h1>Absensi Saya</h1><p>{{ karyawan.nama }} &middot; {{ label_periode }}</p></div>
+    {% include 'karyawan/partials/filter_periode.html' %}
+</div>
+<div class="absensi-saya-layout">
+{% include 'karyawan/partials/ringkasan_absensi.html' %}
+{% if ada_data %}
+<section class="karyawan-section" aria-labelledby="absensi-title">
+    <div class="karyawan-section-header"><h2 id="absensi-title">Catatan Harian</h2></div>
+    <div class="card table-card"><div class="table-scroll" tabindex="0" role="region" aria-label="Catatan kehadiran harian"><table>
+        <thead>
+            <tr>
+                <th scope="col">Tanggal</th>
+                <th scope="col">Hari</th>
+                <th scope="col">Status</th>
+            </tr>
+        </thead>
+        <tbody>{% for a in daftar_absensi %}<tr{% if a.is_weekend %} class="absensi-saya-weekend"{% endif %}><td>{{ a.tanggal|date:'d/m/Y' }}</td><td>{{ a.nama_hari }}</td><td>
+            {% if a.is_weekend %}
+                <span class="karyawan-muted">Libur</span>
+            {% elif not a.tercatat %}
+                <span class="karyawan-muted">Belum Dicatat</span>
+            {% elif a.hadir %}
+                <span class="absensi-saya-hadir">Hadir</span>
+            {% else %}
+                <span class="absensi-saya-tidak-hadir">Tidak Hadir</span>
+            {% endif %}
+        </td></tr>{% endfor %}</tbody>
+    </table></div></div>
+</section>
+{% elif not periode %}<p class="karyawan-note">Belum ada data periode untuk bulan/tahun yang dipilih.</p>
+{% else %}<p class="karyawan-note">Belum ada data absensi Anda untuk periode ini.</p>{% endif %}
+</div>
+</div>
+{% endblock %}

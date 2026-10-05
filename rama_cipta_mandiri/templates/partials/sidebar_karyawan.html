@@ -1,0 +1,20 @@
+<div class="sidebar">
+    <div class="sidebar-section-label">Utama</div>
+
+    <a href="{% url 'dashboard_karyawan' %}" class="sidebar-link {% if request.resolver_match.url_name == 'dashboard_karyawan' %}active{% endif %}">
+        <i class="bi bi-grid-fill icon"></i>
+        Dashboard
+    </a>
+
+    <a href="{% url 'absensi_saya' %}" class="sidebar-link {% if request.resolver_match.url_name == 'absensi_saya' %}active{% endif %}">
+        <i class="bi bi-clock-fill icon"></i>
+        Absensi Saya
+    </a>
+
+    <div class="sidebar-section-label">Penilaian Saya</div>
+
+    <a href="{% url 'riwayat_penilaian' %}" class="sidebar-link {% if request.resolver_match.url_name == 'riwayat_penilaian' or request.resolver_match.url_name == 'detail_penilaian' %}active{% endif %}">
+        <i class="bi bi-clipboard2-check-fill icon"></i>
+        Riwayat Penilaian
+    </a>
+</div>

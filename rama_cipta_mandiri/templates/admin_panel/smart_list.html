@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+{% block title %}Proses SMART{% endblock %}
+
+{% block content %}
+<div class="page-header-row">
+    <div class="page-header">
+        <h1>Proses SMART</h1>
+        <p>Riwayat periode yang sudah dihitung rankingnya.</p>
+    </div>
+    <a href="{% url 'smart_proses_form' %}" class="btn btn-primary">+ Proses Periode Baru</a>
+</div>
+
+<div class="card">
+    <table>
+        <thead>
+            <tr>
+                <th>Periode</th>
+                <th>Jumlah Karyawan Dinilai</th>
+                <th>Aksi</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for periode in daftar_periode %}
+            <tr>
+                <td>{{ periode }}</td>
+                <td>{{ periode.alternatif.count }}</td>
+                <td>
+                    <div class="table-actions">
+                        <a href="{% url 'hasil_smart' periode.id %}" class="btn btn-outline btn-sm">Lihat Hasil</a>
+                        <a href="{% url 'smart_detail' periode.id %}" class="btn btn-outline btn-sm">Lihat Detail Perhitungan</a>
+                        <button type="button" class="btn btn-danger btn-sm"
+                                onclick="openDeleteModal('{% url 'smart_delete' periode.id %}', '{{ periode }}')">
+                            Hapus
+                        </button>
+                    </div>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="3">
+                    <div class="empty-state">Belum ada periode yang diproses. Klik "Proses Periode Baru" untuk mulai.</div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<!-- Modal Konfirmasi Hapus -->
+<div class="modal-overlay" id="deleteModal">
+    <div class="modal-box">
+        <h3>Hapus Hasil SMART?</h3>
+        <p>Yakin ingin menghapus <strong id="deleteModalNama"></strong>? Data ranking & perhitungan akan hilang dan harus diproses ulang dari awal.</p>
+        <form method="post" id="deleteModalForm">
+            {% csrf_token %}
+            <div class="modal-actions">
+                <button type="button" class="btn btn-outline" onclick="closeDeleteModal()">Batal</button>
+                <button type="submit" class="btn btn-danger">Ya, Hapus</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function openDeleteModal(url, nama) {
+    document.getElementById('deleteModalForm').action = url;
+    document.getElementById('deleteModalNama').textContent = nama;
+    document.getElementById('deleteModal').classList.add('show');
+}
+function closeDeleteModal() {
+    document.getElementById('deleteModal').classList.remove('show');
+}
+document.getElementById('deleteModal').addEventListener('click', function (e) {
+    if (e.target === this) closeDeleteModal();
+});
+</script>
+{% endblock %}

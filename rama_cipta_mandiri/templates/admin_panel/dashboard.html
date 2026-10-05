@@ -1,0 +1,460 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="page-header dashboard-page-header">
+    <div>
+        <h1>Dashboard Admin</h1>
+        <p>Ringkasan data dan proses penilaian kinerja karyawan menggunakan metode SMART.</p>
+    </div>
+
+    <div class="dashboard-period">
+        <span>Periode Penilaian</span>
+        <strong>
+            {% if periode_penilaian %}
+                {{ periode_penilaian }}
+            {% else %}
+                Belum ada periode
+            {% endif %}
+        </strong>
+    </div>
+</div>
+
+<!-- =========================================================
+     RINGKASAN
+========================================================= -->
+<div class="dashboard-summary">
+    <div class="summary-item">
+        <div class="summary-top">
+            <span class="summary-label">Karyawan Aktif</span>
+            <span class="summary-icon">
+                <i class="fa-solid fa-users"></i>
+            </span>
+        </div>
+
+        <div class="summary-value">
+            {{ total_karyawan_aktif }}
+        </div>
+
+        <div class="summary-caption">
+            Dari {{ total_karyawan }} karyawan terdaftar
+        </div>
+    </div>
+
+    <div class="summary-item">
+        <div class="summary-top">
+            <span class="summary-label">Kriteria Aktif</span>
+            <span class="summary-icon">
+                <i class="fa-solid fa-list-check"></i>
+            </span>
+        </div>
+
+        <div class="summary-value">
+            {{ total_kriteria }}
+        </div>
+
+        <div class="summary-caption">
+            {{ total_subkriteria }} sub kriteria tersedia
+        </div>
+    </div>
+
+    <div class="summary-item">
+        <div class="summary-top">
+            <span class="summary-label">Karyawan Dinilai</span>
+            <span class="summary-icon">
+                <i class="fa-solid fa-clipboard-check"></i>
+            </span>
+        </div>
+
+        <div class="summary-value">
+            {{ total_alternatif }}
+        </div>
+
+        <div class="summary-caption">
+            {% if periode_penilaian %}
+                Periode {{ periode_penilaian }}
+            {% else %}
+                Belum ada periode penilaian
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="summary-item">
+        <div class="summary-top">
+            <span class="summary-label">Hasil SMART</span>
+            <span class="summary-icon">
+                <i class="fa-solid fa-ranking-star"></i>
+            </span>
+        </div>
+
+        <div class="summary-value">
+            {{ total_hasil }}
+        </div>
+
+        <div class="summary-caption">
+            {% if sudah_diproses_smart %}
+                Hasil ranking telah tersedia
+            {% else %}
+                Belum ada hasil SMART
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- =========================================================
+     PROSES + STATUS SISTEM
+========================================================= -->
+<div class="dashboard-grid">
+
+    <!-- PROSES PENILAIAN -->
+    <section class="dashboard-section">
+        <div class="section-head">
+            <div>
+                <h2>Proses Penilaian</h2>
+
+                <p>
+                    {% if periode_penilaian %}
+                        Status proses penilaian periode {{ periode_penilaian }}.
+                    {% else %}
+                        Belum ada data periode penilaian.
+                    {% endif %}
+                </p>
+            </div>
+        </div>
+
+        <div class="workflow-list">
+
+            <!-- ABSENSI -->
+            <div class="workflow-item">
+                <div class="workflow-number">
+                    01
+                </div>
+
+                <div class="workflow-content">
+                    <strong>Absensi Karyawan</strong>
+                    <span>
+                        Data kehadiran digunakan sebagai dasar penilaian kriteria absensi.
+                    </span>
+                </div>
+
+                <div class="workflow-side">
+                    <strong>
+                        {{ total_absensi }} Data
+                    </strong>
+
+                    <span>
+                        {{ total_hadir }} hadir
+                    </span>
+
+                    <a href="{% url 'absensi_bulanan' %}">
+                        Buka Absensi →
+                    </a>
+                </div>
+            </div>
+
+            <!-- PENILAIAN -->
+            <div class="workflow-item">
+                <div class="workflow-number">
+                    02
+                </div>
+
+                <div class="workflow-content">
+                    <strong>Penilaian Karyawan</strong>
+                    <span>
+                        Lengkapi nilai seluruh kriteria sebelum menjalankan perhitungan SMART.
+                    </span>
+                </div>
+
+                <div class="workflow-side">
+                    <strong>
+                        {{ progres_penilaian }}%
+                    </strong>
+
+                    <span>
+                        {{ total_penilaian }}/{{ total_penilaian_seharusnya }} nilai
+                    </span>
+
+                    <a href="{% url 'penilaian_list' %}">
+                        Buka Penilaian →
+                    </a>
+                </div>
+            </div>
+
+            <!-- SMART -->
+            <div class="workflow-item">
+                <div class="workflow-number">
+                    03
+                </div>
+
+                <div class="workflow-content">
+                    <strong>Perhitungan SMART</strong>
+                    <span>
+                        Proses utility, pembobotan, nilai akhir, dan penentuan peringkat karyawan.
+                    </span>
+                </div>
+
+                <div class="workflow-side">
+                    {% if sudah_diproses_smart %}
+                        <strong>
+                            Selesai
+                        </strong>
+
+                        <span>
+                            {{ total_hasil }} hasil ranking
+                        </span>
+                    {% else %}
+                        <strong>
+                            Belum Diproses
+                        </strong>
+
+                        <span>
+                            Belum ada hasil SMART
+                        </span>
+                    {% endif %}
+
+                    <a href="{% url 'smart_list' %}">
+                        Buka SMART →
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- STATUS SISTEM -->
+    <section class="dashboard-section">
+        <div class="section-head">
+            <div>
+                <h2>Status Sistem</h2>
+                <p>Kesiapan data sebelum proses perhitungan SMART.</p>
+            </div>
+        </div>
+
+        <div class="status-list">
+
+            <div class="status-row">
+                <span>Periode Penilaian</span>
+
+                <strong>
+                    {% if periode_penilaian %}
+                        {{ periode_penilaian }}
+                    {% else %}
+                        Belum Ada
+                    {% endif %}
+                </strong>
+            </div>
+
+            <div class="status-row">
+                <span>Kriteria Aktif</span>
+                <strong>
+                    {{ total_kriteria }} Kriteria
+                </strong>
+            </div>
+
+            <div class="status-row">
+                <span>Total Bobot</span>
+
+                <strong class="{% if bobot_valid %}text-valid{% else %}text-invalid{% endif %}">
+                    {{ total_bobot }}%
+                </strong>
+            </div>
+
+            <div class="status-row">
+                <span>Status Bobot</span>
+
+                {% if bobot_valid %}
+                    <strong class="text-valid">
+                        <i class="fa-solid fa-circle-check"></i>
+                        Valid
+                    </strong>
+                {% else %}
+                    <strong class="text-invalid">
+                        <i class="fa-solid fa-circle-exclamation"></i>
+                        Belum Valid
+                    </strong>
+                {% endif %}
+            </div>
+
+            <div class="status-row">
+                <span>Status Penilaian</span>
+
+                {% if penilaian_lengkap %}
+                    <strong class="text-valid">
+                        <i class="fa-solid fa-circle-check"></i>
+                        Lengkap
+                    </strong>
+                {% elif total_alternatif > 0 %}
+                    <strong class="text-warning">
+                        Belum Lengkap
+                    </strong>
+                {% else %}
+                    <strong>
+                        Belum Ada Data
+                    </strong>
+                {% endif %}
+            </div>
+
+        </div>
+
+        <div class="progress-area">
+            <div class="progress-info">
+                <span>Kelengkapan Penilaian</span>
+                <strong>
+                    {{ progres_penilaian }}%
+                </strong>
+            </div>
+
+            <div class="progress-track">
+                <div
+                    class="progress-fill"
+                    style="width: {{ progres_penilaian }}%;">
+                </div>
+            </div>
+        </div>
+    </section>
+
+</div>
+
+<!-- =========================================================
+     KARYAWAN TERBAIK
+========================================================= -->
+<section class="dashboard-section best-section">
+    <div class="section-head">
+        <div>
+            <h2>Karyawan Terbaik Per Bulan</h2>
+            <p>
+                Peringkat pertama berdasarkan hasil perhitungan SMART pada setiap periode.
+            </p>
+        </div>
+
+        <a href="{% url 'smart_list' %}" class="section-link">
+            Lihat Hasil SMART →
+        </a>
+    </div>
+
+    {% if karyawan_terbaik_bulanan %}
+
+        <div class="best-table-wrap">
+            <table class="best-table">
+                <thead>
+                    <tr>
+                        <th>Karyawan</th>
+                        <th>Jabatan</th>
+                        <th>Periode</th>
+                        <th>Nilai SMART</th>
+                        <th>Predikat</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for hasil in karyawan_terbaik_bulanan %}
+                        <tr>
+                            <td>
+                                <div class="employee-winner">
+                                    <span class="winner-icon">
+                                        <i class="fa-solid fa-trophy"></i>
+                                    </span>
+
+                                    <div>
+                                        <strong>
+                                            {{ hasil.alternatif.karyawan.nama }}
+                                        </strong>
+
+                                        <span>
+                                            Peringkat 1
+                                        </span>
+                                    </div>
+                                </div>
+                            </td>
+
+                            <td>
+                                {% if hasil.alternatif.karyawan.jabatan %}
+                                    {{ hasil.alternatif.karyawan.get_jabatan_display }}
+                                {% else %}
+                                    —
+                                {% endif %}
+                            </td>
+
+                            <td>
+                                <strong>
+                                    {{ hasil.alternatif.periode }}
+                                </strong>
+                            </td>
+
+                            <td>
+                                <span class="smart-score">
+                                    {{ hasil.total_nilai|floatformat:4 }}
+                                </span>
+                            </td>
+
+                            <td>
+                                {{ hasil.predikat }}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+    {% else %}
+
+        <div class="dashboard-empty">
+            <i class="fa-solid fa-ranking-star"></i>
+
+            <div>
+                <strong>
+                    Belum ada hasil peringkat
+                </strong>
+
+                <p>
+                    Karyawan terbaik akan muncul setelah perhitungan SMART selesai dilakukan.
+                </p>
+            </div>
+        </div>
+
+    {% endif %}
+</section>
+
+<!-- =========================================================
+     AKSI CEPAT
+========================================================= -->
+<section class="quick-actions-section">
+    <div>
+        <h3>Aksi Cepat</h3>
+        <p>Akses menu pengelolaan data utama.</p>
+    </div>
+
+    <div class="quick-actions-grid">
+        <a href="{% url 'karyawan_list' %}" class="btn btn-outline">
+            Kelola Karyawan
+        </a>
+
+        <a href="{% url 'kriteria_list' %}" class="btn btn-outline">
+            Kelola Kriteria
+        </a>
+
+        <a href="{% url 'subkriteria_list' %}" class="btn btn-outline">
+            Kelola Sub Kriteria
+        </a>
+
+        <a href="{% url 'absensi_bulanan' %}" class="btn btn-outline">
+            Kelola Absensi
+        </a>
+
+        <a href="{% url 'penilaian_list' %}" class="btn btn-outline">
+            Kelola Penilaian
+        </a>
+
+        <a href="{% url 'smart_list' %}" class="btn btn-primary">
+            Hasil SMART
+        </a>
+    </div>
+</section>
+
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+{% endblock %}

@@ -1,0 +1,25 @@
+<dl class="karyawan-stats">
+    <div class="card karyawan-stat karyawan-stat-primary">
+        <dt>Total Nilai</dt>
+        <dd>{{ hasil.total_nilai|floatformat:4 }}<span class="karyawan-stat-hint">{{ hasil.alternatif.periode }}</span></dd>
+    </div>
+    <div class="card karyawan-stat">
+        <dt>Ranking</dt>
+        <dd>#{{ hasil.ranking }}<span class="karyawan-stat-hint">{{ hasil.alternatif.periode }}</span></dd>
+    </div>
+    <div class="card karyawan-stat">
+        <dt>Predikat</dt>
+        <dd><span class="karyawan-stat-predicate">{{ hasil.predikat }}</span><span class="karyawan-stat-hint">Hasil SMART</span></dd>
+    </div>
+    <div class="card karyawan-stat">
+        <dt>Persentase Kehadiran</dt>
+        <dd>
+            {% if ringkasan_absensi %}
+                {{ ringkasan_absensi.persen_hadir|floatformat:1 }}%
+                <span class="karyawan-stat-hint">{{ ringkasan_absensi.hadir }} dari {{ ringkasan_absensi.total }} hari tercatat</span>
+            {% else %}
+                &mdash;<span class="karyawan-stat-hint">Belum ada catatan hari kerja</span>
+            {% endif %}
+        </dd>
+    </div>
+</dl>

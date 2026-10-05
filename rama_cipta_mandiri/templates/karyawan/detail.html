@@ -1,0 +1,118 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Detail Penilaian - {{ alternatif.periode }}{% endblock %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/karyawan_portal.css' %}">
+{% endblock %}
+{% block content %}
+<div class="karyawan-portal">
+<div class="page-header-row">
+    <div class="page-header"><h1>Detail Penilaian</h1><p>{{ karyawan.nama }} &middot; {{ alternatif.periode }}</p></div>
+    <a href="{% url 'riwayat_penilaian' %}?tahun={{ tahun_dipilih }}" class="btn btn-outline">Kembali ke Riwayat</a>
+</div>
+{% if hasil %}{% include 'karyawan/partials/ringkasan_hasil.html' %}
+{% else %}<p class="card karyawan-status">Hasil penilaian periode ini belum diproses.</p>{% endif %}
+{% include 'karyawan/partials/ringkasan_absensi.html' with tautan_absensi=True %}
+{% if hasil %}
+<section class="karyawan-section detail-criteria" aria-labelledby="detail-title">
+    <div class="karyawan-section-header">
+        <div>
+            <h2 id="detail-title">Rincian Kriteria</h2>
+            <p class="karyawan-section-description">
+                Rincian nilai setiap kriteria yang digunakan dalam perhitungan SMART.
+            </p>
+        </div>
+    </div>
+
+    <div class="card table-card detail-criteria-card">
+        <div class="table-scroll" tabindex="0" role="region" aria-label="Rincian nilai dan kontribusi kriteria">
+            <table class="detail-criteria-table">
+                <thead>
+                    <tr>
+                        <th scope="col">Kode</th>
+                        <th scope="col">Kriteria</th>
+                        <th scope="col">Penilaian Asli</th>
+                        <th scope="col" class="karyawan-numeric">Bobot</th>
+                        <th scope="col" class="karyawan-numeric">Utility</th>
+                        <th scope="col" class="karyawan-numeric">Kontribusi Nilai</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for d in detail_kriteria %}
+                    <tr>
+                        <td>
+                            <span class="criteria-code">{{ d.kriteria.kode }}</span>
+                        </td>
+
+                        <td class="criteria-name">
+                            {{ d.kriteria.nama }}
+                        </td>
+
+                        <td>
+                            {% if d.penilaian_asli %}
+                                <div class="criteria-original-value">
+                                    {{ d.penilaian_asli.nilai_raw|floatformat:2 }}
+                                </div>
+
+                                {% if d.penilaian_asli.subkriteria %}
+                                    <span class="criteria-subvalue">
+                                        {{ d.penilaian_asli.subkriteria.nama }}
+                                    </span>
+                                {% endif %}
+                            {% else %}
+                                <span class="karyawan-muted">&mdash;</span>
+                            {% endif %}
+                        </td>
+
+                        <td class="karyawan-numeric">
+                            {{ d.bobot_ternormalisasi|floatformat:4 }}
+                        </td>
+
+                        <td class="karyawan-numeric">
+                            {{ d.nilai_utility|floatformat:4 }}
+                        </td>
+
+                        <td class="karyawan-numeric criteria-contribution">
+                            {{ d.nilai_akhir_kriteria|floatformat:4 }}
+                        </td>
+                    </tr>
+
+                    {% empty %}
+                    <tr>
+                        <td colspan="6">
+                            <div class="empty-state">
+                                Belum ada rincian kriteria tersimpan.
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+
+                {% if detail_kriteria %}
+                <tfoot>
+                    <tr class="criteria-total-row">
+                        <td colspan="5">
+                            <div class="criteria-total-label">
+                                <strong>Total Nilai SMART</strong>
+                                <span>
+                                    Jumlah seluruh kontribusi nilai kriteria
+                                </span>
+                            </div>
+                        </td>
+
+                        <td class="karyawan-numeric">
+                            <strong class="criteria-total-value">
+                                {{ hasil.total_nilai|floatformat:4 }}
+                            </strong>
+                        </td>
+                    </tr>
+                </tfoot>
+                {% endif %}
+            </table>
+        </div>
+    </div>
+</section>
+{% endif %}
+</div>
+{% endblock %}

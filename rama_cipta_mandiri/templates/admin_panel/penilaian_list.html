@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Data Penilaian{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/penilaian_list.css' %}">
+
+{% endblock %}
+
+{% block content %}
+<div class="page-header page-header-row">
+    <div>
+        <h1>Data Penilaian</h1>
+        <p>Daftar periode penilaian karyawan per bulan.</p>
+    </div>
+    <a href="{% url 'penilaian_form' %}" class="btn btn-primary">
+        <i class="bi bi-plus-lg"></i> Tambah Penilaian
+    </a>
+</div>
+
+<div class="card">
+    {% if daftar_periode %}
+    <table>
+        <thead>
+            <tr>
+                <th>Periode</th>
+                <th>Jumlah Karyawan Dinilai</th>
+                <th style="width: 200px;">Aksi</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for periode in daftar_periode %}
+            <tr>
+                <td>{{ periode }}</td>
+                <td>{{ periode.jumlah_karyawan }} karyawan</td>
+                <td>
+                    <div class="aksi-cell">
+                        <a href="{% url 'penilaian_form_periode' periode.id %}"
+                        class="btn btn-outline btn-sm">
+                            <i class="bi bi-pencil"></i> Ubah
+                        </a>
+                        <form method="post"
+                            action="{% url 'penilaian_hapus' periode.id %}"
+                            onsubmit="return confirm('Yakin mau hapus penilaian periode {{ periode }}? Semua data penilaian di periode ini akan ikut terhapus.');">
+
+                            {% csrf_token %}
+
+                            <button type="submit" class="btn btn-danger btn-sm">
+                                <i class="bi bi-trash"></i> Hapus
+                            </button>
+
+                        </form>
+
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <div class="empty-state">
+        <i class="bi bi-clipboard-x"></i>
+        <p>Belum ada data penilaian. Klik &quot;Tambah Penilaian&quot; untuk mulai mengisi.</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

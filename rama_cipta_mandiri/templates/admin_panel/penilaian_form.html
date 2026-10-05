@@ -1,0 +1,555 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Input Nilai Karyawan{% endblock %}
+
+{% block extra_css %}
+<style>
+.filter-bar {
+    margin-bottom: 24px;
+}
+
+.filter-form {
+    display: flex;
+    align-items: flex-end;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.filter-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.filter-field label {
+    margin: 0;
+    color: var(--ink-600);
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.filter-field select {
+    width: 180px;
+    height: 40px;
+    padding: 0 36px 0 12px;
+    border: 1px solid var(--ink-300);
+    border-radius: var(--radius-md);
+    background: var(--surface);
+    color: var(--ink-900);
+    font-family: var(--font-body);
+    font-size: 13.5px;
+    transition: border-color .15s ease, box-shadow .15s ease;
+}
+
+.filter-field select:hover {
+    border-color: #CBD5E1;
+}
+
+.filter-field select:focus {
+    outline: none;
+    border-color: var(--brand-500);
+    box-shadow: 0 0 0 3px var(--brand-100);
+}
+
+.filter-form > .btn {
+    height: 40px;
+    margin: 0;
+    padding: 0 20px;
+    flex-shrink: 0;
+}
+
+/* TABLE */
+.nilai-table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    border: 1px solid var(--ink-300);
+    border-radius: var(--radius-md);
+    background: var(--surface);
+}
+
+.nilai-table {
+    width: 100%;
+    min-width: 950px;
+    border-collapse: separate;
+    border-spacing: 0;
+    background: var(--surface);
+}
+
+.nilai-table th,
+.nilai-table td {
+    padding: 13px 14px;
+    border-right: 1px solid var(--ink-300);
+    border-bottom: 1px solid var(--ink-300);
+    text-align: center;
+    vertical-align: middle;
+}
+
+.nilai-table th:last-child,
+.nilai-table td:last-child {
+    border-right: 0;
+}
+
+.nilai-table tbody tr:last-child td {
+    border-bottom: 0;
+}
+
+.nilai-table thead th {
+    background: var(--brand-700);
+    color: #fff;
+    font-size: 12.5px;
+    font-weight: 600;
+    line-height: 1.35;
+    white-space: nowrap;
+}
+
+/* KARYAWAN */
+.nilai-table .col-karyawan {
+    width: 210px;
+    min-width: 210px;
+    max-width: 210px;
+}
+
+.nilai-table thead th.col-karyawan {
+    position: sticky;
+    left: 0;
+    z-index: 4;
+    background: var(--brand-700);
+    text-align: left;
+}
+
+.nilai-table tbody td.col-karyawan {
+    position: sticky;
+    left: 0;
+    z-index: 2;
+    background: var(--surface);
+    text-align: left;
+    box-shadow: 1px 0 0 var(--ink-300);
+}
+
+.nilai-table tbody tr:nth-child(even) td.col-karyawan {
+    background: #FAFBFC;
+}
+
+.nama-karyawan {
+    color: var(--ink-900);
+    font-size: 13.5px;
+    font-weight: 600;
+    line-height: 1.4;
+}
+
+/* HEADER KRITERIA */
+.kriteria-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+}
+
+.kriteria-nama {
+    font-size: 12.5px;
+    font-weight: 600;
+    line-height: 1.3;
+}
+
+.kriteria-tag {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2px 7px;
+    border-radius: 5px;
+    font-size: 9.5px;
+    font-weight: 700;
+    line-height: 1.4;
+    text-transform: uppercase;
+    letter-spacing: .03em;
+}
+
+.kriteria-tag.cost {
+    background: #FEE2E2;
+    color: #B91C1C;
+}
+
+.kriteria-tag.benefit {
+    background: #DCFCE7;
+    color: #15803D;
+}
+
+/* SELECT PENILAIAN */
+.nilai-table select {
+    width: 100%;
+    min-width: 165px;
+    height: 38px;
+    padding: 0 32px 0 10px;
+    border: 1px solid var(--ink-300);
+    border-radius: var(--radius-md);
+    background: var(--surface);
+    color: var(--ink-900);
+    font-family: var(--font-body);
+    font-size: 12.5px;
+    transition: border-color .15s ease, box-shadow .15s ease;
+}
+
+.nilai-table select:hover {
+    border-color: #CBD5E1;
+}
+
+.nilai-table select:focus {
+    outline: none;
+    border-color: var(--brand-500);
+    box-shadow: 0 0 0 3px var(--brand-100);
+}
+
+/* BULK FILL (dropdown "Isi semua" di header kriteria) */
+.nilai-table thead .bulk-select {
+    margin-top: 8px;
+    min-width: 165px;
+    height: 32px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--brand-700);
+    cursor: pointer;
+}
+
+/* NILAI ABSENSI OTOMATIS */
+.nilai-otomatis-box {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 150px;
+    min-height: 38px;
+    padding: 7px 10px;
+    border: 1px solid #BFDBFE;
+    border-radius: var(--radius-md);
+    background: #EFF6FF;
+    color: var(--brand-700);
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1.3;
+    white-space: nowrap;
+}
+
+.nilai-otomatis-box.kosong {
+    background: #FFFBEB;
+    border-color: #FDE68A;
+    color: var(--status-cukup);
+}
+
+/* WARNA C1 BERDASARKAN NILAI SUBKRITERIA */
+/* 5 = Sangat Baik */
+.nilai-otomatis-box.nilai-5 {
+    background: #DCFCE7;
+    border-color: #86EFAC;
+    color: #15803D;
+}
+
+/* 4 = Baik */
+.nilai-otomatis-box.nilai-4 {
+    background: #DBEAFE;
+    border-color: #93C5FD;
+    color: #1D4ED8;
+}
+
+/* 3 = Cukup */
+.nilai-otomatis-box.nilai-3 {
+    background: #FEF9C3;
+    border-color: #FDE047;
+    color: #A16207;
+}
+
+/* 2 = Kurang */
+.nilai-otomatis-box.nilai-2 {
+    background: #FFEDD5;
+    border-color: #FDBA74;
+    color: #C2410C;
+}
+
+/* 1 = Sangat Kurang */
+.nilai-otomatis-box.nilai-1 {
+    background: #FEE2E2;
+    border-color: #FCA5A5;
+    color: #B91C1C;
+}
+
+.nilai-table tbody tr:hover td:not(.col-karyawan) {
+    background: #F8FAFC;
+}
+
+/* ACTION */
+.penilaian-table-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-top: 18px;
+}
+
+.penilaian-table-actions .pagination {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: var(--ink-600);
+    font-size: 12.5px;
+}
+
+.penilaian-table-actions .pagination .nav-link {
+    color: var(--brand-600);
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.penilaian-table-actions .pagination .nav-link:hover {
+    text-decoration: underline;
+}
+
+.penilaian-table-actions .pagination .disabled {
+    color: #9CA3AF;
+    cursor: default;
+}
+
+@media (max-width: 700px) {
+    .filter-form {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+    }
+
+    .filter-field select {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .filter-form > .btn {
+        grid-column: 1 / -1;
+        width: 100%;
+    }
+
+    .nilai-table {
+        min-width: 850px;
+    }
+
+    .nilai-table .col-karyawan {
+        width: 180px;
+        min-width: 180px;
+        max-width: 180px;
+    }
+
+    .penilaian-table-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .penilaian-table-actions > .btn {
+        width: 100%;
+    }
+
+    .penilaian-table-actions .pagination {
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>Input Nilai Karyawan</h1>
+    <p>Isi penilaian seluruh karyawan aktif untuk periode {{ periode }}.</p>
+</div>
+
+<div class="filter-bar">
+    <form method="get" class="filter-form">
+        <div class="filter-field">
+            <label for="bulan">Bulan Penilaian</label>
+            <select name="bulan" id="bulan">
+                <option value="">Pilih Bulan</option>
+                {% for nilai, label in daftar_bulan %}
+                    <option value="{{ nilai }}" {% if nilai == bulan_dipilih %}selected{% endif %}>{{ label }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="filter-field">
+            <label for="tahun">Tahun</label>
+            <select name="tahun" id="tahun">
+                {% for tahun_opsi in daftar_tahun %}
+                    <option value="{{ tahun_opsi }}" {% if tahun_opsi == tahun_dipilih %}selected{% endif %}>{{ tahun_opsi }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Tampilkan</button>
+    </form>
+</div>
+
+{% if periode %}
+<form method="post" id="penilaianForm">
+    {% csrf_token %}
+    <input type="hidden" name="bulan" value="{{ bulan_dipilih }}">
+    <input type="hidden" name="tahun" value="{{ tahun_dipilih }}">
+    <input type="hidden" name="page" value="{{ page_obj.number }}">
+
+    <div class="nilai-table-wrapper">
+        <table class="nilai-table">
+            <thead>
+                <tr>
+                    <th class="col-karyawan">Karyawan</th>
+                    {% for kriteria in daftar_kriteria %}
+                        <th>
+                            <div class="kriteria-header">
+                                <span class="kriteria-nama">{{ kriteria.nama }}</span>
+                                <span class="kriteria-tag {% if kriteria.tipe == 'cost' %}cost{% else %}benefit{% endif %}">
+                                    {% if kriteria.tipe == 'cost' %}Cost{% else %}Benefit{% endif %}
+                                </span>
+                            </div>
+                        </th>
+                    {% endfor %}
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for row in rows %}
+                    <tr>
+                        <td class="col-karyawan">
+                            <div class="nama-karyawan">{{ row.karyawan.nama }}</div>
+                        </td>
+
+                        {% for cell in row.cells %}
+                            <td>
+                                {% if cell.otomatis %}
+                                    {% if not cell.ada_data_absensi %}
+                                        <span class="nilai-otomatis-box kosong">Belum ada data absensi</span>
+                                    {% elif cell.ada_data %}
+                                        <div class="nilai-otomatis-box nilai-{{ cell.nilai|floatformat:'0' }}">
+                                            <span class="absensi-jumlah">{{ cell.jumlah_hadir }} Hari/ </span>
+                                            <span class="absensi-sub">
+                                                {{ cell.subkriteria_nama }}
+                                            </span>
+                                        </div>
+                                    {% else %}
+                                        <span class="nilai-otomatis-box kosong">
+                                            {{ cell.jumlah_tidak_hadir }} Hari (rentang belum tersedia)
+                                        </span>
+                                    {% endif %}
+                                {% else %}
+                                    <select name="{{ cell.field_name }}">
+                                        <option value="">-- Pilih --</option>
+                                        {% for opsi in cell.opsi %}
+                                            <option value="{{ opsi.id }}" {% if opsi.id == cell.selected_id %}selected{% endif %}>
+                                                {{ opsi.nilai|floatformat:"0" }} | {{ opsi.nama }}{% if opsi.range_nilai %} ({{ opsi.range_nilai }}){% endif %}
+                                            </option>
+                                        {% endfor %}
+                                    </select>
+                                {% endif %}
+                            </td>
+                        {% endfor %}
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="{{ daftar_kriteria|length|add:1 }}" style="text-align:center; padding:40px 20px; color:var(--ink-600);">
+                            Tidak ada karyawan aktif.
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="penilaian-table-actions">
+        <button type="submit" class="btn btn-primary">Simpan Halaman Ini</button>
+
+        <div class="pagination">
+            {% if page_obj.has_previous %}
+                <a href="?page={{ page_obj.previous_page_number }}" class="nav-link">&laquo; Previous</a>
+            {% else %}
+                <span class="disabled">&laquo; Previous</span>
+            {% endif %}
+
+            <span>Halaman {{ page_obj.number }} dari {{ page_obj.paginator.num_pages }}</span>
+
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}" class="nav-link">Next &raquo;</a>
+            {% else %}
+                <span class="disabled">Next &raquo;</span>
+            {% endif %}
+        </div>
+    </div>
+</form>
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+(function () {
+    const form = document.getElementById('penilaianForm');
+    if (!form) return;
+
+    let isDirty = false;
+
+    // ===== ISI SEMUA PER KRITERIA =====
+    const table = form.querySelector('.nilai-table');
+
+    table.querySelectorAll('thead th').forEach(function (th, colIndex) {
+        if (th.classList.contains('col-karyawan')) return;
+
+        // Ambil select baris pertama di kolom ini (kolom C1 otomatis tidak punya select)
+        const firstSelect = table.querySelector(
+            'tbody tr td:nth-child(' + (colIndex + 1) + ') select'
+        );
+        if (!firstSelect) return;
+
+        const bulk = document.createElement('select');
+        bulk.className = 'bulk-select';
+        bulk.setAttribute('aria-label', 'Isi semua baris untuk kriteria ini');
+        bulk.appendChild(new Option('⚡ Isi semua...', ''));
+
+        Array.from(firstSelect.options).forEach(function (opt) {
+            if (opt.value) bulk.appendChild(new Option(opt.text, opt.value));
+        });
+
+        bulk.addEventListener('change', function () {
+            const nilai = bulk.value;
+            if (!nilai) return;
+
+            table.querySelectorAll('tbody tr').forEach(function (row) {
+                const cell = row.children[colIndex];
+                const select = cell && cell.querySelector('select');
+                if (select) select.value = nilai;
+            });
+
+            isDirty = true;
+
+            // kembalikan ke placeholder supaya bisa dipakai lagi
+            bulk.value = '';
+        });
+
+        th.appendChild(bulk);
+    });
+
+    // ===== PERINGATAN PERUBAHAN BELUM DISIMPAN =====
+    form.addEventListener('change', function (e) {
+        if (e.target.tagName === 'SELECT') isDirty = true;
+    });
+
+    form.addEventListener('submit', function () {
+        isDirty = false;
+    });
+
+    window.addEventListener('beforeunload', function (e) {
+        if (!isDirty) return;
+        e.preventDefault();
+        e.returnValue = '';
+    });
+
+    document.querySelectorAll('.pagination a.nav-link').forEach(function (link) {
+        link.addEventListener('click', function (e) {
+            if (!isDirty) return;
+
+            const lanjut = confirm('Ada perubahan penilaian yang belum disimpan. Tetap pindah halaman?');
+            if (!lanjut) e.preventDefault();
+        });
+    });
+})();
+</script>
+{% endblock %}

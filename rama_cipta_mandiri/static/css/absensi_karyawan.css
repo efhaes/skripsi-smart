@@ -1,0 +1,8 @@
+.absensi-saya-layout { display: grid; grid-template-columns: minmax(260px, .8fr) minmax(0, 1.6fr); gap: 24px; align-items: start; }
+.absensi-saya-layout .karyawan-attendance-body { grid-template-columns: 1fr; gap: 12px; }
+.absensi-saya-weekend { background: var(--ink-100); }
+.absensi-saya-hadir { color: var(--status-sangat-baik); }
+.absensi-saya-tidak-hadir { color: var(--status-sangat-kurang); }
+@media (max-width: 1100px) {
+    .absensi-saya-layout { grid-template-columns: 1fr; gap: 0; }
+}

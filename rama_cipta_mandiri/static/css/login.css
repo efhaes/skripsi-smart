@@ -1,0 +1,344 @@
+/* =========================================================
+   LOGIN PAGE — SPK PENILAIAN KARYAWAN
+   PT. RAMA CIPTA MANDIRI
+   ========================================================= */
+
+.login-body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    box-sizing: border-box;
+    background: #F8FAFC;
+    font-family: 'Inter', sans-serif;
+    color: #111827;
+}
+
+.login-body * {
+    box-sizing: border-box;
+}
+
+/* =========================================================
+   WRAPPER
+   ========================================================= */
+
+.login-wrapper {
+    width: 100%;
+    max-width: 430px;
+}
+
+/* =========================================================
+   CARD
+   ========================================================= */
+
+.login-card {
+    width: 100%;
+    padding: 32px;
+    background: #FFFFFF;
+    border: 1px solid #E5E7EB;
+    border-radius: 14px;
+    box-shadow: 0 16px 40px rgba(17, 24, 39, 0.08);
+}
+
+/* =========================================================
+   BRAND / LOGO
+   ========================================================= */
+
+.login-brand {
+    margin-bottom: 26px;
+    text-align: center;
+}
+
+.login-brand img {
+    display: block;
+    width: 185px;
+    height: 72px;
+    margin: 0 auto 14px;
+    object-fit: contain;
+    object-position: center;
+}
+
+.login-brand h1 {
+    margin: 0;
+    color: #111827;
+    font-family: 'Inter', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 1.3;
+}
+
+/* =========================================================
+   MESSAGES
+   ========================================================= */
+
+.login-messages {
+    width: 100%;
+    margin-bottom: 18px;
+}
+
+.login-messages .alert {
+    width: 100%;
+    margin: 0;
+    padding: 12px 14px;
+    border-radius: 10px;
+    font-family: 'Inter', sans-serif;
+    font-size: 12.5px;
+    line-height: 1.5;
+}
+
+.login-messages .alert-success {
+    color: #166534;
+    background: #F0FDF4;
+    border: 1px solid #BBF7D0;
+}
+
+.login-messages .alert-error,
+.login-messages .alert-danger {
+    color: #991B1B;
+    background: #FEF2F2;
+    border: 1px solid #FECACA;
+}
+
+.login-messages .alert-warning {
+    color: #92400E;
+    background: #FFFBEB;
+    border: 1px solid #FDE68A;
+}
+
+.login-messages .alert-info {
+    color: #1E40AF;
+    background: #EFF6FF;
+    border: 1px solid #BFDBFE;
+}
+
+/* =========================================================
+   FORM
+   ========================================================= */
+
+.login-form {
+    width: 100%;
+    margin: 0;
+}
+
+.login-form .form-group {
+    width: 100%;
+    margin-bottom: 18px;
+}
+
+.login-form label {
+    display: block;
+    margin: 0 0 7px;
+    color: #111827;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1.4;
+}
+
+/* =========================================================
+   INPUT
+   ========================================================= */
+
+.login-form input[type="text"],
+.login-form input[type="password"] {
+    display: block;
+    width: 100%;
+    height: 44px;
+    margin: 0;
+    padding: 0 13px;
+    border: 1px solid #D1D5DB;
+    border-radius: 10px;
+    outline: none;
+    background: #FFFFFF;
+    color: #111827;
+    font-family: 'Inter', sans-serif;
+    font-size: 13.5px;
+    font-weight: 400;
+    line-height: normal;
+    appearance: none;
+    -webkit-appearance: none;
+    transition:
+        border-color .15s ease,
+        box-shadow .15s ease,
+        background .15s ease;
+}
+
+.login-form input[type="text"]::placeholder,
+.login-form input[type="password"]::placeholder {
+    color: #9CA3AF;
+    opacity: 1;
+}
+
+.login-form input[type="text"]:hover,
+.login-form input[type="password"]:hover {
+    border-color: #9CA3AF;
+}
+
+.login-form input[type="text"]:focus,
+.login-form input[type="password"]:focus {
+    border-color: #3B82F6;
+    background: #FFFFFF;
+    box-shadow: 0 0 0 3px #DBEAFE;
+}
+
+/* =========================================================
+   PASSWORD
+   ========================================================= */
+
+.password-wrapper {
+    position: relative;
+    display: block;
+    width: 100%;
+}
+
+.password-wrapper input[type="password"],
+.password-wrapper input[type="text"] {
+    width: 100%;
+    padding-right: 92px;
+}
+
+.toggle-password {
+    position: absolute;
+    top: 50%;
+    right: 9px;
+    z-index: 2;
+    transform: translateY(-50%);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    padding: 5px 7px;
+    border: 0;
+    border-radius: 6px;
+    outline: none;
+    background: transparent;
+    color: #2563EB;
+    font-family: 'Inter', sans-serif;
+    font-size: 11.5px;
+    font-weight: 600;
+    line-height: 1;
+    cursor: pointer;
+    transition:
+        color .15s ease,
+        background .15s ease;
+}
+
+.toggle-password:hover {
+    color: #1D4ED8;
+    background: #EFF6FF;
+}
+
+.toggle-password:focus-visible {
+    outline: 2px solid #3B82F6;
+    outline-offset: 1px;
+}
+
+/* =========================================================
+   LOGIN BUTTON
+   ========================================================= */
+
+.btn-login {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 44px;
+    margin: 4px 0 0;
+    padding: 0 18px;
+    border: 1px solid #2563EB;
+    border-radius: 10px;
+    outline: none;
+    background: #2563EB;
+    color: #FFFFFF;
+    font-family: 'Inter', sans-serif;
+    font-size: 13.5px;
+    font-weight: 600;
+    line-height: 1;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    transition:
+        background .15s ease,
+        border-color .15s ease,
+        box-shadow .15s ease,
+        transform .1s ease;
+}
+
+.btn-login:hover {
+    background: #1D4ED8;
+    border-color: #1D4ED8;
+}
+
+.btn-login:active {
+    background: #1E40AF;
+    border-color: #1E40AF;
+    transform: translateY(1px);
+}
+
+.btn-login:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px #DBEAFE;
+}
+
+/* =========================================================
+   FOOTER
+   ========================================================= */
+
+.login-footer {
+    margin: 16px auto 0;
+    padding: 0 10px;
+    color: #6B7280;
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    font-weight: 400;
+    line-height: 1.5;
+    text-align: center;
+}
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 520px) {
+    .login-body {
+        align-items: center;
+        padding: 16px;
+    }
+
+    .login-wrapper {
+        max-width: 100%;
+    }
+
+    .login-card {
+        padding: 28px 22px;
+        border-radius: 12px;
+    }
+
+    .login-brand {
+        margin-bottom: 24px;
+    }
+
+    .login-brand img {
+        width: 165px;
+        height: 64px;
+        margin-bottom: 12px;
+    }
+
+    .login-brand h1 {
+        font-size: 18px;
+    }
+
+    .login-form input[type="text"],
+    .login-form input[type="password"],
+    .btn-login {
+        height: 44px;
+    }
+
+    .login-footer {
+        font-size: 10.5px;
+    }
+}

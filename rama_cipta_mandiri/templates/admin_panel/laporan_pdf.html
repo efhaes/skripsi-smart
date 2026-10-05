@@ -1,0 +1,336 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<style>
+    @page {
+        size: A4 landscape;
+        margin: 1.4cm 1.5cm 1.4cm 1.5cm;
+    }
+
+    body {
+        margin: 0;
+        font-family: Helvetica, Arial, sans-serif;
+        font-size: 9px;
+        line-height: 1.4;
+        color: #222;
+    }
+
+.header {
+    margin-bottom: 18px;
+    padding-bottom: 10px;
+    border-bottom: 1.5px solid #333;
+}
+
+.header-table {
+    width: 100%;
+    border: none;
+    margin: 0;
+}
+
+.header-table td {
+    border: none;
+    padding: 0;
+    vertical-align: middle;
+}
+
+.header-logo {
+    width: 18%;
+    text-align: left;
+}
+
+.header-logo img {
+    width: 70px;
+    height: auto;
+}
+
+.header-title {
+    width: 64%;
+    text-align: center;
+}
+
+.header-title h1 {
+    margin: 0 0 5px;
+    font-size: 17px;
+    font-weight: bold;
+    color: #111;
+}
+
+.header-title p {
+    margin: 0;
+    font-size: 9px;
+    color: #555;
+}
+
+.header-space {
+    width: 18%;
+}
+
+    .step-section {
+        margin-bottom: 18px;
+        page-break-inside: avoid;
+    }
+
+    .step-title {
+        margin-bottom: 3px;
+        font-size: 11px;
+        font-weight: bold;
+        color: #111;
+    }
+
+    .step-desc {
+        margin-bottom: 7px;
+        font-size: 8.5px;
+        color: #555;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        table-layout: fixed;
+    }
+
+    th {
+        padding: 5px 4px;
+        border: 1px solid #777;
+        background-color: #e9ecef;
+        color: #111;
+        font-size: 8.5px;
+        font-weight: bold;
+        text-align: center;
+        vertical-align: middle;
+    }
+
+    td {
+        padding: 4px;
+        border: 1px solid #aaa;
+        font-size: 8.5px;
+        text-align: center;
+        vertical-align: middle;
+    }
+
+    td.left,
+    th.left {
+        text-align: left;
+    }
+
+    .col-karyawan {
+    width: 24%;
+}
+
+.col-total {
+    width: 13%;
+}
+
+.ranking-table {
+    width: 100%;
+}
+
+.ranking-table .col-rank {
+    width: 10%;
+}
+
+.ranking-table .col-kode {
+    width: 12%;
+}
+
+.ranking-table .col-karyawan {
+    width: 34%;
+}
+
+.ranking-table .col-total {
+    width: 20%;
+}
+
+.ranking-table .col-predikat {
+    width: 24%;
+}
+
+.ranking-table td {
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+    .footer-note {
+        margin-top: 14px;
+        padding-top: 6px;
+        border-top: 1px solid #ccc;
+        font-size: 7.5px;
+        color: #777;
+        text-align: right;
+    }
+</style>
+</head>
+<body>
+
+<div class="header">
+    <table class="header-table">
+        <tr>
+            <td class="header-logo">
+                <img src="{% static "img/logo-rcm.jpeg" %} " alt="Logo RCM">
+            </td>
+            <td class="header-title">
+                <h1>LAPORAN PERHITUNGAN METODE SMART</h1>
+                <p>Periode {{ periode }} &nbsp;&nbsp;|&nbsp;&nbsp; Dicetak pada {% now "d F Y, H:i" %}</p>
+            </td>
+            <td class="header-space"></td>
+        </tr>
+    </table>
+</div>
+
+<!-- STEP 1 -->
+<div class="step-section">
+    <div class="step-title">1. Bobot Kriteria</div>
+    <div class="step-desc">
+        Bobot masing-masing kriteria yang digunakan dalam proses perhitungan metode SMART.
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 12%;">Kode</th>
+                <th class="left" style="width: 48%;">Nama Kriteria</th>
+                <th style="width: 20%;">Tipe</th>
+                <th style="width: 20%;">Bobot (%)</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for k in daftar_kriteria %}
+            <tr>
+                <td>{{ k.kode }}</td>
+                <td class="left">{{ k.nama }}</td>
+                <td>{{ k.get_tipe_display }}</td>
+                <td>{{ k.bobot }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<!-- STEP 2 -->
+<div class="step-section">
+    <div class="step-title">2. Matriks Keputusan (Nilai Awal)</div>
+    <div class="step-desc">
+        Nilai awal setiap karyawan pada masing-masing kriteria sebelum dilakukan proses normalisasi.
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th class="left col-karyawan">Karyawan</th>
+                {% for k in daftar_kriteria %}
+                <th>{{ k.kode }}</th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for h in hasil_matrix %}
+            <tr>
+                <td class="left">{{ h.nama }}</td>
+                {% for cell in h.matrix %}
+                <td>{{ cell.nilai_raw|default_if_none:"-" }}</td>
+                {% endfor %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<!-- STEP 3 -->
+<div class="step-section">
+    <div class="step-title">3. Normalisasi (Nilai Utility)</div>
+    <div class="step-desc">
+        Nilai utility diperoleh melalui proses normalisasi berdasarkan jenis kriteria benefit dan cost.
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th class="left col-karyawan">Karyawan</th>
+                {% for k in daftar_kriteria %}
+                <th>{{ k.kode }}</th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for h in hasil_matrix %}
+            <tr>
+                <td class="left">{{ h.nama }}</td>
+                {% for cell in h.matrix %}
+                <td>{{ cell.nilai_utility|floatformat:4 }}</td>
+                {% endfor %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<!-- STEP 4 -->
+<div class="step-section">
+    <div class="step-title">4. Nilai Akhir per Kriteria</div>
+    <div class="step-desc">
+        Nilai akhir setiap kriteria diperoleh dari perkalian bobot ternormalisasi dengan nilai utility.
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th class="left col-karyawan">Karyawan</th>
+                {% for k in daftar_kriteria %}
+                <th>{{ k.kode }}</th>
+                {% endfor %}
+                <th class="col-total">Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for h in hasil_matrix %}
+            <tr>
+                <td class="left">{{ h.nama }}</td>
+                {% for cell in h.matrix %}
+                <td>{{ cell.nilai_akhir_kriteria|floatformat:4 }}</td>
+                {% endfor %}
+                <td class="total-value">{{ h.total_nilai|floatformat:4 }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<!-- STEP 5 -->
+<div class="step-section">
+    <div class="step-title">5. Hasil Ranking Akhir</div>
+    <div class="step-desc">
+        Hasil akhir perhitungan SMART diurutkan berdasarkan total nilai tertinggi hingga terendah.
+    </div>
+
+    <table class="ranking-table">
+        <thead>
+            <tr>
+                <th class="col-rank">Rank</th>
+                <th class="col-kode">Kode</th>
+                <th class="left col-karyawan">Karyawan</th>
+                <th class="col-total">Total Nilai</th>
+                <th class="col-predikat">Predikat</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for h in hasil_ranking %}
+            <tr>
+                <td>{{ h.ranking }}</td>
+                <td>{{ h.kode }}</td>
+                <td class="left">{{ h.nama }}</td>
+                <td class="total-value">{{ h.total_nilai|floatformat:4 }}</td>
+                <td>{{ h.predikat }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<div class="footer-note">
+    Dokumen ini dihasilkan secara otomatis oleh Sistem Pendukung Keputusan Penilaian Kinerja Karyawan.
+</div>
+
+</body>
+</html>

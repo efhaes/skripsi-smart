@@ -1,0 +1,10 @@
+/* ==================== TABLE ACTIONS ==================== */
+.table-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+/* ==================== STAT HINT ==================== */
+.stat-hint { font-size: 12.5px; color: var(--ink-600); }
+.stat-hint-warning { color: var(--status-cukup); font-weight: 600; }

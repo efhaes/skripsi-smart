@@ -1,0 +1,696 @@
+/* =========================================================
+   KARYAWAN PORTAL
+   Shared employee portal composition.
+   Global layout/components remain owned by base.css.
+========================================================= */
+
+.karyawan-portal {
+    width: 100%;
+    max-width: 1600px;
+    min-width: 0;
+    margin-inline: auto;
+}
+
+/* =========================================================
+   PAGE HEADER
+========================================================= */
+
+.karyawan-portal .page-header-row {
+    align-items: center;
+    gap: 24px;
+    margin-bottom: 28px;
+}
+
+.karyawan-portal .page-header {
+    min-width: 0;
+}
+
+.karyawan-portal .page-header h1 {
+    font-size: 28px;
+    font-weight: 700;
+    line-height: 1.25;
+    letter-spacing: -0.025em;
+    color: var(--ink-900);
+    overflow-wrap: anywhere;
+}
+
+.karyawan-portal .page-header p {
+    margin-top: 6px;
+    color: var(--ink-600);
+    font-size: 14px;
+}
+
+/* =========================================================
+   PERIOD FILTER
+========================================================= */
+
+.karyawan-filter {
+    display: flex;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.karyawan-filter .form-group {
+    width: 136px;
+    margin-bottom: 0;
+}
+
+.karyawan-filter .form-group:last-of-type {
+    width: 104px;
+}
+
+.karyawan-filter .form-group label {
+    margin-bottom: 6px;
+    color: var(--ink-600);
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.karyawan-filter .form-group select,
+.karyawan-filter > .btn {
+    height: 40px;
+}
+
+.karyawan-filter .form-group select {
+    background-color: var(--surface);
+    border-color: var(--ink-300);
+    transition: border-color .15s ease, box-shadow .15s ease;
+}
+
+.karyawan-filter .form-group select:focus {
+    border-color: var(--brand-500);
+    box-shadow: 0 0 0 3px var(--brand-100);
+}
+
+.karyawan-filter > .btn {
+    padding: 8px 18px;
+}
+
+/* =========================================================
+   SECTION
+========================================================= */
+
+.karyawan-section {
+    min-width: 0;
+    margin-bottom: 26px;
+}
+
+.karyawan-section-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 14px;
+}
+
+.karyawan-section-header h2 {
+    margin: 0;
+    color: var(--ink-900);
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1.35;
+    letter-spacing: -0.015em;
+}
+
+.karyawan-section-description {
+    max-width: 680px;
+    margin-top: 5px;
+    color: var(--ink-600);
+    font-size: 13px;
+    line-height: 1.55;
+}
+
+/* =========================================================
+   SUMMARY METRICS
+========================================================= */
+
+.karyawan-stats {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 14px;
+    margin-bottom: 26px;
+}
+
+.karyawan-stat {
+    position: relative;
+    min-width: 0;
+    padding: 18px 20px;
+    overflow: hidden;
+    border-color: var(--ink-300);
+    transition: border-color .15s ease, transform .15s ease;
+}
+
+.karyawan-stat:hover {
+    border-color: #CBD5E1;
+}
+
+.karyawan-stat-primary {
+    border-color: var(--brand-100);
+    background: #F8FBFF;
+}
+
+.karyawan-stat-primary::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 3px;
+    background: var(--brand-600);
+}
+
+.karyawan-stat dt {
+    color: var(--ink-600);
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 1.4;
+    letter-spacing: .045em;
+    text-transform: uppercase;
+}
+
+.karyawan-stat dd {
+    margin: 8px 0 0;
+    color: var(--ink-900);
+    font-size: 28px;
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: -0.025em;
+    overflow-wrap: anywhere;
+}
+
+.karyawan-stat-primary dd {
+    color: var(--brand-700);
+}
+
+.karyawan-stat-predicate {
+    font-size: 20px;
+    line-height: 1.3;
+}
+
+.karyawan-stat-hint {
+    display: block;
+    margin-top: 7px;
+    color: var(--ink-600);
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 1.45;
+    letter-spacing: 0;
+}
+
+/* =========================================================
+   STATUS / EMPTY SMART
+========================================================= */
+
+.karyawan-status {
+    position: relative;
+    margin-bottom: 24px;
+    padding: 18px 20px 18px 24px;
+    overflow: hidden;
+    border-color: var(--brand-100);
+    background: #F8FBFF;
+}
+
+.karyawan-status::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 3px;
+    background: var(--brand-500);
+}
+
+.karyawan-status h2 {
+    margin: 0;
+    color: var(--ink-900);
+    font-size: 16px;
+    font-weight: 700;
+}
+
+.karyawan-status p {
+    max-width: 760px;
+    margin-top: 5px;
+    color: var(--ink-600);
+    font-size: 13px;
+    line-height: 1.55;
+}
+
+/* =========================================================
+   RINGKASAN KEHADIRAN
+========================================================= */
+
+.karyawan-attendance-panel {
+    min-width: 0;
+    margin-bottom: 26px;
+}
+
+.karyawan-attendance-panel.card {
+    padding: 22px 24px;
+}
+
+.karyawan-attendance-body {
+    display: grid;
+    grid-template-columns: minmax(200px, .85fr) minmax(260px, 1fr);
+    gap: 36px;
+    align-items: center;
+}
+
+/* Persentase utama */
+
+.karyawan-attendance-primary {
+    min-width: 0;
+}
+
+.karyawan-attendance-value {
+    margin: 0;
+    color: var(--ink-900);
+    font-size: 32px;
+    font-weight: 700;
+    line-height: 1.15;
+    letter-spacing: -0.03em;
+}
+
+.karyawan-attendance-primary > .karyawan-muted {
+    margin: 5px 0 0;
+    color: var(--ink-600);
+    font-size: 12px;
+}
+
+/* Progress */
+
+.karyawan-attendance-progress {
+    display: block;
+    appearance: none;
+    width: 100%;
+    height: 7px;
+    margin-top: 15px;
+    overflow: hidden;
+    border: 0;
+    border-radius: 999px;
+    background: var(--ink-100);
+    accent-color: var(--brand-600);
+}
+
+.karyawan-attendance-progress::-webkit-progress-bar {
+    border-radius: 999px;
+    background: var(--ink-100);
+}
+
+.karyawan-attendance-progress::-webkit-progress-value {
+    border-radius: 999px;
+    background: var(--brand-600);
+}
+
+.karyawan-attendance-progress::-moz-progress-bar {
+    border-radius: 999px;
+    background: var(--brand-600);
+}
+
+/* Keterangan di bawah progress */
+
+.karyawan-attendance-caption {
+    margin: 10px 0 0;
+    color: var(--ink-600);
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.karyawan-attendance-caption strong {
+    color: var(--ink-900);
+    font-weight: 600;
+}
+
+/* Rincian hadir / tidak hadir */
+
+.karyawan-attendance {
+    margin: 0;
+}
+
+.karyawan-attendance > div {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 9px 0;
+    border-bottom: 1px solid var(--ink-100);
+}
+
+.karyawan-attendance dt {
+    color: var(--ink-600);
+    font-size: 13px;
+    font-weight: 400;
+}
+
+.karyawan-attendance dd {
+    margin: 0;
+    color: var(--ink-900);
+    font-size: 14px;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+}
+
+/* Total dibuat berbeda supaya hierarchy jelas */
+
+.karyawan-attendance > .karyawan-attendance-total {
+    margin-top: 3px;
+    padding-top: 12px;
+    padding-bottom: 0;
+    border-top: 1px solid var(--ink-300);
+    border-bottom: 0;
+}
+
+.karyawan-attendance-total dt {
+    color: var(--ink-900);
+    font-weight: 600;
+}
+
+.karyawan-attendance-total dd {
+    color: var(--brand-700);
+    font-weight: 700;
+}
+
+/* Catatan */
+
+.karyawan-attendance-panel > .karyawan-note {
+    margin: 18px 0 0;
+    padding-top: 14px;
+    border-top: 1px solid var(--ink-100);
+    color: var(--ink-600);
+    font-size: 12px;
+    line-height: 1.55;
+}
+
+/* Tombol */
+
+.karyawan-panel-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 14px;
+}
+
+/* Tidak ada data */
+
+.karyawan-panel-empty {
+    margin: 0;
+    padding: 12px 0;
+    color: var(--ink-600);
+    font-size: 13px;
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 768px) {
+    .karyawan-attendance-body {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+}
+
+@media (max-width: 600px) {
+    .karyawan-attendance-panel.card {
+        padding: 18px;
+    }
+
+    .karyawan-attendance-value {
+        font-size: 28px;
+    }
+
+    .karyawan-attendance > div {
+        gap: 14px;
+    }
+}
+
+/* =========================================================
+   TABLE
+========================================================= */
+
+.karyawan-portal .table-card {
+    overflow: hidden;
+    padding: 0;
+}
+
+.karyawan-portal .table-scroll {
+    max-width: 100%;
+}
+
+.karyawan-portal table {
+    width: 100%;
+}
+
+.karyawan-portal table thead th {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--ink-300);
+    background: #F8FAFC;
+    color: #475569;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .035em;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.karyawan-portal table tbody td {
+    padding: 13px 16px;
+    border-bottom-color: var(--ink-100);
+    color: var(--ink-900);
+    font-size: 14px;
+    vertical-align: middle;
+}
+
+.karyawan-portal table tbody tr:last-child td {
+    border-bottom: 0;
+}
+
+.karyawan-portal table tbody tr {
+    transition: background-color .12s ease;
+}
+
+.karyawan-portal table tbody tr:hover {
+    background: #FAFCFF;
+}
+
+.karyawan-portal table .karyawan-numeric {
+    text-align: right;
+    white-space: nowrap;
+}
+
+.karyawan-portal .karyawan-code {
+    color: var(--brand-700);
+    font-weight: 700;
+}
+
+/* =========================================================
+   DETAIL CRITERIA
+========================================================= */
+
+.detail-criteria-card {
+    border-color: var(--ink-300);
+}
+
+.criteria-code {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 34px;
+    height: 26px;
+    padding: 0 8px;
+    border: 1px solid var(--brand-100);
+    border-radius: 7px;
+    background: #F8FBFF;
+    color: var(--brand-700);
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.criteria-name {
+    font-weight: 600;
+}
+
+.criteria-original-value {
+    color: var(--ink-900);
+    font-weight: 600;
+    line-height: 1.3;
+}
+
+.criteria-subvalue {
+    display: block;
+    margin-top: 3px;
+    color: var(--ink-600);
+    font-size: 12px;
+    line-height: 1.35;
+}
+
+.criteria-contribution {
+    color: var(--brand-700) !important;
+    font-weight: 700;
+}
+
+/* =========================================================
+   TOTAL SMART
+========================================================= */
+
+.detail-criteria-table tfoot td {
+    padding: 16px;
+    border-top: 1px solid var(--brand-100);
+    background: #F8FBFF;
+}
+
+.criteria-total-label {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.criteria-total-label strong {
+    color: var(--ink-900);
+    font-size: 14px;
+}
+
+.criteria-total-label span {
+    color: var(--ink-600);
+    font-size: 12px;
+    font-weight: 400;
+}
+
+.criteria-total-value {
+    color: var(--brand-700);
+    font-size: 19px;
+    font-weight: 700;
+    letter-spacing: -0.015em;
+}
+
+/* =========================================================
+   COMMON
+========================================================= */
+
+.karyawan-muted,
+.karyawan-portal td.karyawan-muted {
+    color: var(--ink-600);
+}
+
+.karyawan-note {
+    margin-top: 8px;
+    color: var(--ink-600);
+    font-size: 12px;
+    line-height: 1.55;
+}
+
+.karyawan-block {
+    display: block;
+}
+
+.karyawan-panel-empty {
+    padding: 14px 0;
+    color: var(--ink-600);
+    font-size: 13px;
+}
+
+.karyawan-portal .karyawan-delta-positive {
+    color: var(--status-sangat-baik);
+}
+
+.karyawan-portal .karyawan-delta-negative {
+    color: var(--status-sangat-kurang);
+}
+
+.karyawan-portal td,
+.karyawan-portal dd {
+    font-variant-numeric: tabular-nums;
+}
+
+.karyawan-portal .empty-state {
+    padding: 24px 18px;
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 1100px) {
+    .karyawan-stats {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .karyawan-attendance-body {
+        gap: 20px;
+    }
+}
+
+@media (max-width: 768px) {
+    .karyawan-portal .page-header-row {
+        align-items: stretch;
+    }
+
+    .karyawan-section-header {
+        align-items: flex-start;
+    }
+
+    .karyawan-attendance-body {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+}
+
+@media (max-width: 600px) {
+    .karyawan-portal .page-header-row {
+        gap: 16px;
+        margin-bottom: 22px;
+    }
+
+    .karyawan-portal .page-header h1 {
+        font-size: 24px;
+    }
+
+    .karyawan-filter {
+        width: 100%;
+    }
+
+    .karyawan-filter .form-group,
+    .karyawan-filter .form-group:last-of-type {
+        flex: 1;
+        width: auto;
+        min-width: 0;
+    }
+
+    .karyawan-filter > .btn {
+        width: 100%;
+    }
+
+    .karyawan-stats {
+        gap: 10px;
+    }
+
+    .karyawan-stat {
+        padding: 15px;
+    }
+
+    .karyawan-stat dd {
+        font-size: 24px;
+    }
+
+    .karyawan-stat-predicate {
+        font-size: 18px;
+    }
+
+    .karyawan-attendance-panel.card {
+        padding: 18px;
+    }
+
+    .karyawan-portal table thead th,
+    .karyawan-portal table tbody td,
+    .detail-criteria-table tfoot td {
+        padding-left: 13px;
+        padding-right: 13px;
+    }
+}
+
+@media (max-width: 420px) {
+    .karyawan-stats {
+        grid-template-columns: 1fr;
+    }
+}

@@ -1,0 +1,352 @@
+/* ====================================================================
+   SUBKRITERIA_LIST.CSS
+   Tabel langsung tanpa card/container tambahan.
+   ==================================================================== */
+
+
+/* =========================================================
+   TABLE WRAPPER
+   ========================================================= */
+
+.subkriteria-table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    overflow-y: visible;
+
+    border: 1px solid var(--ink-300);
+    border-radius: var(--radius-lg);
+
+    background: var(--surface);
+
+    scrollbar-width: thin;
+    scrollbar-color: #CBD5E1 transparent;
+}
+
+.subkriteria-table-wrapper::-webkit-scrollbar {
+    height: 8px;
+}
+
+.subkriteria-table-wrapper::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.subkriteria-table-wrapper::-webkit-scrollbar-thumb {
+    background: #CBD5E1;
+    border-radius: 20px;
+}
+
+
+/* =========================================================
+   TABLE
+   ========================================================= */
+
+.subkriteria-table {
+    width: 100%;
+    min-width: 900px;
+
+    border-collapse: collapse;
+    border-spacing: 0;
+    table-layout: fixed;
+
+    background: var(--surface);
+}
+
+
+/* =========================================================
+   THEAD
+   ========================================================= */
+
+.subkriteria-table thead {
+    display: table-header-group !important;
+}
+
+.subkriteria-table thead tr {
+    height: 50px;
+}
+
+.subkriteria-table thead th {
+    position: static !important;
+    top: auto !important;
+
+    height: 50px;
+    padding: 0 16px !important;
+
+    background: var(--ink-100) !important;
+    color: var(--ink-600) !important;
+
+    border: 0 !important;
+    border-bottom: 1px solid var(--ink-300) !important;
+
+    vertical-align: middle !important;
+
+    font-size: 11.5px;
+    font-weight: 700;
+    line-height: 1.2;
+
+    text-align: left;
+    text-transform: uppercase;
+    letter-spacing: 0.035em;
+
+    white-space: nowrap;
+
+    transform: none !important;
+}
+
+
+/* =========================================================
+   TBODY
+   ========================================================= */
+
+.subkriteria-table tbody tr {
+    height: 56px;
+}
+
+.subkriteria-table tbody td {
+    height: 56px;
+
+    padding: 12px 16px;
+
+    background: var(--surface);
+    color: var(--ink-900);
+
+    border: 0;
+    border-bottom: 1px solid var(--ink-300);
+
+    vertical-align: middle;
+
+    font-size: 13.5px;
+    line-height: 1.4;
+}
+
+.subkriteria-table tbody tr:last-child td {
+    border-bottom: 0;
+}
+
+
+/* =========================================================
+   NO
+   ========================================================= */
+
+.subkriteria-table .col-no {
+    width: 65px;
+    text-align: center;
+}
+
+.subkriteria-table thead th.col-no {
+    text-align: center;
+}
+
+.subkriteria-table tbody td.col-no {
+    color: var(--ink-600);
+    font-weight: 600;
+}
+
+
+/* =========================================================
+   KRITERIA
+   ========================================================= */
+
+.subkriteria-table .col-kriteria {
+    width: 260px;
+}
+
+.subkriteria-table tbody td.col-kriteria {
+    padding-left: 20px;
+    padding-right: 24px;
+}
+
+.kriteria-info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+}
+
+.kriteria-info strong {
+    color: var(--ink-900);
+
+    font-size: 13.5px;
+    font-weight: 700;
+    line-height: 1.35;
+}
+
+.kriteria-info span {
+    color: var(--ink-600);
+
+    font-size: 11.5px;
+    font-weight: 500;
+}
+
+
+/* =========================================================
+   ROWSPAN / GROUP
+   ========================================================= */
+
+.subkriteria-table tbody td.group-cell {
+    vertical-align: middle !important;
+    background: var(--surface) !important;
+}
+
+
+/* =========================================================
+   NAMA OPSI
+   ========================================================= */
+
+.subkriteria-table .col-opsi {
+    width: auto;
+}
+
+.subkriteria-table tbody td.col-opsi {
+    color: var(--ink-900);
+    font-weight: 500;
+}
+
+
+/* =========================================================
+   NILAI
+   ========================================================= */
+
+.subkriteria-table .col-nilai {
+    width: 100px;
+    text-align: center;
+}
+
+.subkriteria-table thead th.col-nilai {
+    text-align: center;
+}
+
+.subkriteria-table tbody td.col-nilai {
+    color: var(--ink-600);
+
+    text-align: center;
+    font-variant-numeric: tabular-nums;
+}
+
+.subkriteria-table tbody td.col-nilai strong {
+    color: var(--brand-700);
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   RANGE NILAI
+   ========================================================= */
+
+.subkriteria-table .col-range {
+    width: 140px;
+    text-align: center;
+}
+
+.subkriteria-table thead th.col-range {
+    text-align: center;
+}
+
+.subkriteria-table tbody td.col-range {
+    color: var(--ink-600);
+
+    text-align: center;
+    font-variant-numeric: tabular-nums;
+}
+
+.empty-value {
+    color: var(--ink-600);
+}
+
+
+/* =========================================================
+   AKSI
+   ========================================================= */
+
+.subkriteria-table .col-aksi {
+    width: 180px;
+}
+
+.subkriteria-table .table-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+
+    gap: 8px;
+
+    margin: 0;
+    padding: 0;
+
+    border: 0;
+    background: transparent;
+}
+
+.subkriteria-table .table-actions .btn {
+    flex-shrink: 0;
+}
+
+
+/* =========================================================
+   PEMISAH ANTAR KRITERIA
+   ========================================================= */
+
+.subkriteria-table tbody tr.group-start:not(:first-child) td {
+    border-top: 2px solid var(--ink-300);
+}
+
+
+/* =========================================================
+   HOVER
+   ========================================================= */
+
+.subkriteria-table tbody tr:hover td:not(.group-cell) {
+    background: var(--ink-100);
+}
+
+
+/* =========================================================
+   EMPTY
+   ========================================================= */
+
+.subkriteria-table .table-empty {
+    padding: 48px 20px !important;
+
+    color: var(--ink-600) !important;
+
+    text-align: center;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 900px) {
+    .subkriteria-table {
+        min-width: 820px;
+    }
+
+    .subkriteria-table .col-kriteria {
+        width: 220px;
+    }
+}
+
+@media (max-width: 640px) {
+    .subkriteria-table {
+        min-width: 760px;
+    }
+
+    .subkriteria-table .col-no {
+        width: 55px;
+    }
+
+    .subkriteria-table .col-kriteria {
+        width: 190px;
+    }
+
+    .subkriteria-table .col-nilai {
+        width: 85px;
+    }
+
+    .subkriteria-table .col-range {
+        width: 120px;
+    }
+
+    .subkriteria-table .col-aksi {
+        width: 165px;
+    }
+}

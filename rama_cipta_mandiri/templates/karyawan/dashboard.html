@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Dashboard Karyawan{% endblock %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/karyawan_portal.css' %}">
+<link rel="stylesheet" href="{% static 'css/dashboard_karyawan.css' %}">
+{% endblock %}
+{% block content %}
+<div class="karyawan-portal dashboard-portal">
+<div class="page-header-row">
+    <div class="page-header">
+        <h1>Halo, {{ karyawan.nama }}</h1>
+        <p>Ringkasan penilaian pribadi &middot; {{ label_periode }}</p>
+    </div>
+    {% include 'karyawan/partials/filter_periode.html' %}
+</div>
+{% if hasil_dipilih %}
+    {% include 'karyawan/partials/ringkasan_hasil.html' with hasil=hasil_dipilih %}
+{% else %}
+    <section class="card karyawan-status" aria-labelledby="smart-status-title">
+        <h2 id="smart-status-title">{% if not periode_dipilih %}Periode belum tersedia{% elif not alternatif_dipilih %}Penilaian belum tersedia{% else %}Hasil penilaian belum diproses{% endif %}</h2>
+        <p>{% if not periode_dipilih %}Belum ada data periode untuk bulan/tahun yang dipilih.{% elif not alternatif_dipilih %}Belum ada data penilaian Anda untuk periode ini.{% else %}Hasil penilaian periode ini belum diproses.{% endif %}</p>
+    </section>
+{% endif %}
+
+<div class="dashboard-overview">
+{% if hasil_dipilih %}
+<section class="card dashboard-comparison-panel" aria-labelledby="perbandingan-title">
+    <div class="karyawan-section-header"><h2 id="perbandingan-title">Perbandingan Periode Sebelumnya</h2></div>
+    {% if perbandingan %}
+    <div>
+        <p class="karyawan-muted">{{ hasil_sebelumnya.alternatif.periode }} &rarr; {{ periode_dipilih }} (periode terpilih).</p>
+        <dl class="dashboard-comparison">
+            <div>
+                <dt>Total Nilai</dt>
+                <dd>
+                    <span class="dashboard-comparison-values">{{ hasil_sebelumnya.total_nilai|floatformat:4 }} &rarr; {{ hasil_dipilih.total_nilai|floatformat:4 }}</span>
+                    <span class="karyawan-note karyawan-block {% if perbandingan.selisih_nilai > 0 %}karyawan-delta-positive{% elif perbandingan.selisih_nilai < 0 %}karyawan-delta-negative{% endif %}">Perubahan: {% if perbandingan.selisih_nilai > 0 %}+{% endif %}{{ perbandingan.selisih_nilai|floatformat:4 }}</span>
+                </dd>
+            </div>
+            <div>
+                <dt>Ranking</dt>
+                <dd>
+                    <span class="dashboard-comparison-values">#{{ hasil_sebelumnya.ranking }} &rarr; #{{ hasil_dipilih.ranking }}</span>
+                    <span class="karyawan-note karyawan-block {% if hasil_dipilih.ranking < hasil_sebelumnya.ranking %}karyawan-delta-positive{% elif hasil_dipilih.ranking > hasil_sebelumnya.ranking %}karyawan-delta-negative{% endif %}">{{ perbandingan.perubahan_ranking }}</span>
+                </dd>
+            </div>
+            <div>
+                <dt>Persentase Kehadiran</dt>
+                <dd>
+                    <span class="dashboard-comparison-values">{% if perbandingan.absensi_sebelumnya %}{{ perbandingan.absensi_sebelumnya.persen_hadir|floatformat:1 }}%{% else %}Belum tersedia{% endif %} &rarr; {% if ringkasan_absensi %}{{ ringkasan_absensi.persen_hadir|floatformat:1 }}%{% else %}Belum tersedia{% endif %}</span>
+                    <span class="karyawan-note karyawan-block {% if perbandingan.selisih_kehadiran > 0 %}karyawan-delta-positive{% elif perbandingan.selisih_kehadiran < 0 %}karyawan-delta-negative{% endif %}">
+                        {% if perbandingan.selisih_kehadiran != None %}
+                            Perubahan: {% if perbandingan.selisih_kehadiran > 0 %}+{% endif %}{{ perbandingan.selisih_kehadiran|floatformat:1 }} poin persentase
+                        {% else %}
+                            Perubahan belum dapat dibandingkan karena catatan kehadiran belum tersedia pada salah satu atau kedua periode.
+                        {% endif %}
+                    </span>
+                </dd>
+            </div>
+        </dl>
+    </div>
+    {% else %}<p class="karyawan-panel-empty">Belum ada hasil SMART sebelumnya untuk dibandingkan.</p>{% endif %}
+</section>
+{% else %}
+    <section class="card dashboard-period" aria-labelledby="periode-title">
+        <div class="karyawan-section-header"><h2 id="periode-title">Periode Terpilih</h2></div>
+        <p class="dashboard-period-value">{{ label_periode }}</p>
+        <p class="karyawan-muted">Hasil SMART belum tersedia untuk periode ini. Hasil periode lain yang sudah diproses dapat dilihat di riwayat penilaian.</p>
+        <a href="{% url 'riwayat_penilaian' %}" class="btn btn-outline btn-sm">Lihat Riwayat Penilaian</a>
+    </section>
+{% endif %}
+    {% include 'karyawan/partials/ringkasan_absensi.html' with tautan_absensi=True %}
+</div>
+
+{% if hasil_dipilih %}
+<section class="karyawan-section" aria-labelledby="kriteria-title">
+    <div class="karyawan-section-header"><h2 id="kriteria-title">Rincian Kriteria</h2><a href="{% url 'detail_penilaian' alternatif_dipilih.pk %}" class="btn btn-outline btn-sm">Detail Penilaian</a></div>
+    <div class="card table-card"><div class="table-scroll" tabindex="0" role="region" aria-label="Rincian per kriteria"><table>
+        <thead><tr><th scope="col">Kode</th><th scope="col">Kriteria</th><th scope="col" class="karyawan-numeric">Bobot ternormalisasi</th><th scope="col" class="karyawan-numeric">Utility</th><th scope="col" class="karyawan-numeric">Kontribusi nilai</th></tr></thead>
+        <tbody>{% for k in breakdown_kriteria %}<tr><td class="karyawan-code">{{ k.kode }}</td><td>{{ k.nama }}</td><td class="karyawan-numeric">{{ k.bobot_ternormalisasi|floatformat:4 }}</td><td class="karyawan-numeric">{{ k.nilai_utility|floatformat:4 }}</td><td class="karyawan-numeric"><strong>{{ k.nilai_akhir|floatformat:4 }}</strong></td></tr>
+        {% empty %}<tr><td colspan="5"><div class="empty-state">Belum ada rincian kriteria tersimpan.</div></td></tr>{% endfor %}</tbody>
+    </table></div></div>
+</section>
+{% endif %}
+<div class="dashboard-history-grid">
+<section class="karyawan-section" aria-labelledby="tren-title">
+    <div class="karyawan-section-header"><h2 id="tren-title">Tren Penilaian {{ tahun_dipilih }}</h2>{% if rata_rata_tahun_ini != None %}<p class="karyawan-muted">Rata-rata nilai: {{ rata_rata_tahun_ini|floatformat:4 }}</p>{% endif %}</div>
+    <div class="card table-card"><div class="table-scroll" tabindex="0" role="region" aria-label="Tren penilaian tahunan"><table>
+        <thead><tr><th scope="col">Bulan</th><th scope="col" class="karyawan-numeric">Total nilai</th><th scope="col" class="karyawan-numeric">Ranking</th><th scope="col">Predikat</th></tr></thead>
+        <tbody>{% for t in tren_tahun_ini %}<tr{% if t.is_dipilih %} class="dashboard-selected"{% endif %}><td>{{ t.bulan_label }}{% if t.is_dipilih %} (dipilih){% endif %}</td><td class="karyawan-numeric">{{ t.total_nilai|floatformat:4 }}</td><td class="karyawan-numeric">#{{ t.ranking }}</td><td><span class="badge badge-{{ t.predikat|slugify }}">{{ t.predikat }}</span></td></tr>
+        {% empty %}<tr><td colspan="4"><div class="empty-state">Belum ada hasil penilaian pada tahun ini.</div></td></tr>{% endfor %}</tbody>
+    </table></div></div>
+</section>
+<section class="karyawan-section" aria-labelledby="terbaru-title">
+    <div class="karyawan-section-header"><h2 id="terbaru-title">Riwayat Penilaian Terbaru</h2><a class="btn btn-outline btn-sm" href="{% url 'riwayat_penilaian' %}">Semua Riwayat</a></div>
+    
+    <div class="card table-card"><div class="table-scroll" tabindex="0" role="region" aria-label="Hasil penilaian terbaru"><table>
+        <thead><tr><th scope="col">Periode</th><th scope="col" class="karyawan-numeric">Total nilai</th><th scope="col" class="karyawan-numeric">Ranking</th><th scope="col">Predikat</th><th scope="col">Aksi</th></tr></thead>
+        <tbody>{% for h in riwayat_terbaru %}<tr><td>{{ h.alternatif.periode }}</td><td class="karyawan-numeric">{{ h.total_nilai|floatformat:4 }}</td><td class="karyawan-numeric">#{{ h.ranking }}</td><td><span class="badge badge-{{ h.predikat|slugify }}">{{ h.predikat }}</span></td><td><a href="{% url 'detail_penilaian' h.alternatif_id %}" class="btn btn-outline btn-sm" aria-label="Detail penilaian {{ h.alternatif.periode }}">Detail</a></td></tr>
+        {% empty %}<tr><td colspan="5"><div class="empty-state">Belum ada riwayat penilaian.</div></td></tr>{% endfor %}</tbody>
+    </table></div></div>
+</section>
+</div>
+</div>
+{% endblock %}

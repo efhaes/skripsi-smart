@@ -1,0 +1,596 @@
+/* =========================================================
+   ABSENSI BULANAN
+   ========================================================= */
+
+
+/* =========================================================
+   FILTER PERIODE
+   ========================================================= */
+
+.filter-bar {
+    width: 100%;
+    margin-bottom: 24px;
+}
+
+.filter-bar .filter-form {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: flex-end !important;
+    justify-content: flex-start !important;
+    flex-wrap: nowrap !important;
+    gap: 12px !important;
+    width: auto !important;
+}
+
+.filter-bar .filter-field {
+    display: flex !important;
+    flex-direction: column !important;
+    flex: 0 0 auto !important;
+    width: 180px !important;
+    margin: 0 !important;
+}
+
+.filter-bar .filter-field label {
+    display: block;
+    margin: 0 0 6px 0;
+
+    color: var(--ink-600);
+
+    font-family: var(--font-body);
+    font-size: 12.5px;
+    font-weight: 600;
+    line-height: 1.4;
+}
+
+.filter-bar .filter-field select {
+    display: block;
+
+    width: 180px !important;
+    min-width: 180px !important;
+    height: 40px !important;
+
+    margin: 0 !important;
+    padding: 0 36px 0 12px !important;
+
+    border: 1px solid var(--ink-300);
+    border-radius: var(--radius-md);
+
+    background-color: var(--surface);
+    color: var(--ink-900);
+
+    font-family: var(--font-body);
+    font-size: 13.5px;
+    font-weight: 400;
+
+    cursor: pointer;
+}
+
+.filter-bar .filter-field select:focus {
+    outline: none;
+    border-color: var(--brand-500);
+    box-shadow: 0 0 0 3px var(--brand-100);
+}
+
+.filter-bar .filter-form > .btn {
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+
+    flex: 0 0 auto !important;
+
+    width: auto !important;
+    min-width: 110px;
+    height: 40px !important;
+
+    margin: 0 !important;
+    padding: 0 20px !important;
+}
+
+
+/* =========================================================
+   CARD
+   ========================================================= */
+
+.absensi-card {
+    width: 100%;
+    padding: 0;
+    overflow: hidden;
+}
+
+
+/* =========================================================
+   TABLE WRAPPER
+   ========================================================= */
+
+.absensi-table-wrapper {
+    position: relative;
+
+    width: 100%;
+    max-width: 100%;
+
+    overflow-x: auto;
+    overflow-y: auto;
+
+    scrollbar-width: thin;
+    scrollbar-color: #CBD5E1 transparent;
+}
+
+.absensi-table-wrapper::-webkit-scrollbar {
+    width: 9px;
+    height: 9px;
+}
+
+.absensi-table-wrapper::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.absensi-table-wrapper::-webkit-scrollbar-thumb {
+    background: #CBD5E1;
+    border-radius: 20px;
+}
+
+
+/* =========================================================
+   TABLE
+   ========================================================= */
+
+.absensi-table {
+    width: max-content;
+    min-width: 100%;
+
+    border-collapse: separate;
+    border-spacing: 0;
+
+    background: var(--surface);
+}
+
+.absensi-table th,
+.absensi-table td {
+    box-sizing: border-box;
+
+    padding: 0;
+
+    text-align: center;
+    vertical-align: middle;
+    white-space: nowrap;
+
+    border-right: 1px solid var(--ink-300);
+    border-bottom: 1px solid var(--ink-300);
+}
+
+
+/* =========================================================
+   KOLOM NAMA KARYAWAN
+   ========================================================= */
+
+.absensi-table th.col-nama,
+.absensi-table td.col-nama {
+    position: sticky;
+    left: 0;
+
+    width: 190px;
+    min-width: 190px;
+    max-width: 190px;
+
+    padding: 0 14px;
+    text-align: left;
+
+    /* Gap ke kolom tanggal */
+    border-right:6px solid var(--bg) !important;
+}
+
+.absensi-table thead th.col-nama {
+    top: 0;
+    z-index: 20;
+
+    height: 84px;
+
+    background: var(--brand-700) !important;
+    color: #fff !important;
+
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.025em;
+}
+
+.absensi-table tbody td.col-nama {
+    z-index: 5;
+    height: 52px;
+
+    background: var(--surface);
+    color: var(--ink-900);
+
+    font-size: 13px;
+    font-weight: 600;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+
+/* =========================================================
+   HEADER TANGGAL
+   ========================================================= */
+
+.absensi-table thead th.col-tanggal {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+
+    width: 58px !important;
+    min-width: 58px !important;
+    max-width: 58px !important;
+    height: 84px !important;
+
+    padding: 0 !important;
+
+    background: var(--surface) !important;
+    color: var(--ink-900) !important;
+}
+
+
+/* =========================================================
+   ISI HEADER KALENDER
+   ========================================================= */
+
+.absensi-table .th-tanggal {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+
+    width: 100%;
+    height: 84px;
+
+    gap: 4px;
+
+    padding: 6px 2px;
+}
+
+.absensi-table .th-hari {
+    display: block !important;
+
+    width: 100%;
+
+    color: var(--ink-600) !important;
+
+    font-size: 9px !important;
+    font-weight: 600 !important;
+    line-height: 1 !important;
+
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.absensi-table .th-nomor {
+    display: block !important;
+
+    width: 100%;
+
+    margin: 1px 0;
+
+    color: var(--ink-900) !important;
+
+    font-size: 16px !important;
+    font-weight: 700 !important;
+    line-height: 18px !important;
+
+    text-align: center;
+}
+
+
+/* =========================================================
+   SELECT ALL
+   ========================================================= */
+
+.absensi-table .select-all-wrap {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+
+    width: 22px;
+    height: 20px;
+
+    margin: 0;
+
+    border-radius: 5px;
+
+    cursor: pointer;
+}
+
+.absensi-table .select-all-wrap:hover {
+    background: var(--brand-100);
+}
+
+.absensi-table input.check-all-kolom {
+    display: block !important;
+
+    width: 14px !important;
+    height: 14px !important;
+
+    margin: 0 !important;
+
+    cursor: pointer;
+
+    accent-color: var(--brand-600);
+}
+/* =========================================================
+   GAP THEAD & TBODY
+   ========================================================= */
+
+/* Beri ruang sebelum baris karyawan pertama */
+.absensi-table tbody::before {
+    content: "";
+    display: table-row;
+    height: 10px;
+}
+
+/* Hilangkan garis pada area gap */
+.absensi-table tbody::before {
+    background: var(--surface);
+}
+
+/* =========================================================
+   BODY TANGGAL
+   ========================================================= */
+.libur-label {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    color: var(--status-sangat-kurang);
+
+    font-size: 10px;
+    font-weight: 600;
+    line-height: 1;
+}
+
+.libur-header {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    min-height: 20px;
+
+    color: var(--status-sangat-kurang);
+
+    font-size: 9px;
+    font-weight: 600;
+    line-height: 1;
+
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+}
+.absensi-table td.attendance-cell {
+    width: 58px !important;
+    min-width: 58px !important;
+    max-width: 58px !important;
+    height: 52px;
+
+    background: var(--surface);
+}
+
+.absensi-table tbody tr:hover td.attendance-cell {
+    background: var(--ink-100);
+}
+
+.absensi-table tbody tr:hover td.col-nama {
+    background: var(--ink-100);
+}
+
+
+/* =========================================================
+   WEEKEND
+   ========================================================= */
+
+.absensi-table thead th.col-tanggal.weekend {
+    background: #FFF7F7 !important;
+}
+
+.absensi-table thead th.col-tanggal.weekend .th-hari {
+    color: var(--status-sangat-kurang) !important;
+}
+
+.absensi-table thead th.col-tanggal.weekend .th-nomor {
+    color: var(--status-sangat-kurang) !important;
+}
+
+.absensi-table tbody td.attendance-cell.weekend {
+    background: #FFF8F8;
+}
+
+.absensi-table tbody tr:hover td.attendance-cell.weekend {
+    background: #FFF1F1;
+}
+
+
+/* =========================================================
+   CHECKBOX KARYAWAN
+   ========================================================= */
+
+.absensi-table tbody input[type="checkbox"] {
+    display: block;
+
+    width: 17px;
+    height: 17px;
+
+    margin: auto;
+
+    cursor: pointer;
+
+    accent-color: var(--brand-600);
+}
+
+
+/* =========================================================
+   EMPTY
+   ========================================================= */
+
+.absensi-table td.empty-row {
+    padding: 48px 20px;
+
+    background: var(--surface);
+    color: var(--ink-600);
+
+    font-size: 13.5px;
+    font-weight: 400;
+
+    text-align: center;
+}
+
+
+/* =========================================================
+   TABLE ACTIONS
+   ========================================================= */
+
+.table-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 16px;
+
+    padding: 18px 20px;
+
+    border-top: 1px solid var(--ink-300);
+
+    background: var(--surface);
+}
+
+
+/* =========================================================
+   PAGINATION
+   ========================================================= */
+
+.table-actions .pagination {
+    display: flex;
+    align-items: center;
+
+    gap: 8px;
+}
+
+.pagination-info {
+    padding: 0 6px;
+
+    color: var(--ink-600);
+
+    font-size: 12.5px;
+    white-space: nowrap;
+}
+
+.table-actions .pagination .nav-link,
+.table-actions .pagination .disabled {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    min-height: 34px;
+
+    padding: 0 12px;
+
+    border: 1px solid var(--ink-300);
+    border-radius: var(--radius-md);
+
+    font-size: 12.5px;
+    font-weight: 500;
+
+    white-space: nowrap;
+}
+
+.table-actions .pagination .nav-link {
+    background: var(--surface);
+    color: var(--ink-900);
+}
+
+.table-actions .pagination .nav-link:hover {
+    background: var(--ink-100);
+}
+
+.table-actions .pagination .disabled {
+    background: var(--ink-100);
+    color: #9CA3AF;
+
+    cursor: not-allowed;
+}
+
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media (max-width: 900px) {
+
+    .filter-bar .filter-form {
+        flex-wrap: wrap !important;
+    }
+
+    .absensi-table th.col-nama,
+    .absensi-table td.col-nama {
+        width: 200px;
+        min-width: 200px;
+        max-width: 200px;
+    }
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 640px) {
+
+    .filter-bar .filter-form {
+        display: grid !important;
+        grid-template-columns: 1fr 1fr !important;
+
+        gap: 12px !important;
+    }
+
+    .filter-bar .filter-field {
+        width: 100% !important;
+        min-width: 0 !important;
+    }
+
+    .filter-bar .filter-field select {
+        width: 100% !important;
+        min-width: 0 !important;
+    }
+
+    .filter-bar .filter-form > .btn {
+        grid-column: 1 / -1;
+
+        width: 100% !important;
+    }
+
+    .absensi-table th.col-nama,
+    .absensi-table td.col-nama {
+        width: 170px;
+        min-width: 170px;
+        max-width: 170px;
+
+        padding-left: 14px;
+        padding-right: 14px;
+    }
+
+    .absensi-table thead th.col-tanggal,
+    .absensi-table td.attendance-cell {
+        width: 52px !important;
+        min-width: 52px !important;
+        max-width: 52px !important;
+    }
+
+    .table-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .table-actions > .btn {
+        width: 100%;
+    }
+
+    .table-actions .pagination {
+        justify-content: space-between;
+    }
+}

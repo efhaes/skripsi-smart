@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Kelola karyawan{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/karyawan_list.css' %}">
+{% endblock %}
+{% block content %}
+<div class="page-header-row">
+    <div class="page-header">
+        <h1>Kelola Karyawan</h1>
+        <p>Data master karyawan & akun login SPK.</p>
+    </div>
+    <a href="{% url 'karyawan_create' %}" class="btn btn-primary">+ Tambah Karyawan</a>
+</div>
+
+<div class="card">
+    <table>
+        <thead>
+            <tr>
+                <th style="width:36px;">No</th>
+                <th>Nama</th>
+                <th>Jabatan</th>
+                <th>Akun Login</th>
+                <th>Status</th>
+                <th style="width:150px;">Aksi</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for k in daftar_karyawan %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ k.nama }}</td>
+                <td>{{ k.get_jabatan_display|default:"-" }}</td>
+                <td>
+                    {% if k.user_id %}
+                        <span class="badge badge-baik">{{ k.user.username }}</span>
+                    {% else %}
+                        <span class="stat-hint">Belum ada akun</span>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if k.aktif %}
+                        <span class="badge badge-sangat-baik">Aktif</span>
+                    {% else %}
+                        <span class="badge badge-kurang">Nonaktif</span>
+                    {% endif %}
+                </td>
+                <td>
+                    <div class="table-actions">
+                        <a href="{% url 'karyawan_update' k.pk %}" class="btn btn-outline btn-sm">Edit</a>
+                        <button type="button"
+                                class="btn btn-danger btn-sm"
+                                onclick="openDeleteModal('{% url 'karyawan_delete' k.pk %}', '{{ k.nama|escapejs }}')">
+                            Hapus
+                        </button>
+                    </div>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="8" style="text-align:center; color:var(--ink-600); padding:24px;">
+                    Belum ada data karyawan.
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<!-- MODAL HAPUS -->
+<div class="modal-overlay" id="deleteModal">
+    <div class="modal-box">
+        <h3>Hapus Karyawan?</h3>
+        <p>Yakin ingin menghapus <strong id="deleteModalNama"></strong>? Tindakan ini tidak bisa dibatalkan. Akun login (jika ada) juga ikut terhapus.</p>
+        <form method="post" id="deleteModalForm">
+            {% csrf_token %}
+            <div class="modal-actions">
+                <button type="button" class="btn btn-outline" onclick="closeDeleteModal()">Batal</button>
+                <button type="submit" class="btn btn-danger">Ya, Hapus</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function openDeleteModal(url, nama) {
+    document.getElementById('deleteModalForm').action = url;
+    document.getElementById('deleteModalNama').textContent = nama;
+    document.getElementById('deleteModal').classList.add('show');
+}
+function closeDeleteModal() {
+    document.getElementById('deleteModal').classList.remove('show');
+}
+document.getElementById('deleteModal').addEventListener('click', function (e) {
+    if (e.target === this) closeDeleteModal();
+});
+</script>
+{% endblock %}

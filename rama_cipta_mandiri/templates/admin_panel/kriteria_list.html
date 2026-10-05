@@ -1,0 +1,119 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Kelola Kriteria{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/table_list.css' %}">
+{% endblock %}
+{% block content %}
+<div class="page-header-row">
+    <div class="page-header">
+        <h1>Kelola Kriteria</h1>
+        <p>Master kriteria penilaian metode SMART.</p>
+    </div>
+    <a href="{% url 'kriteria_create' %}" class="btn btn-primary">+ Tambah Kriteria</a>
+</div>
+
+<div class="card stat-card">
+    <div>
+        <div class="stat-label">Total Bobot Kriteria Aktif</div>
+        <div class="stat-value">{{ total_bobot_aktif }}%</div>
+    </div>
+    {% if bobot_valid %}
+        <span class="badge badge-sangat-baik">Valid — total 100%</span>
+    {% else %}
+        <span class="badge badge-sangat-kurang">Belum 100%, cek kembali bobotnya</span>
+    {% endif %}
+</div>
+
+<div class="card table-card">
+    <div class="table-scroll">
+        <table>
+            <thead>
+                <tr>
+                    <th style="width:36px;">Urutan</th>
+                    <th>Kode</th>
+                    <th>Nama Kriteria</th>
+                    <th>Bobot</th>
+                    <th>Tipe</th>
+                    <th>Status</th>
+                    <th style="width:150px;">Aksi</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for k in daftar_kriteria %}
+                <tr>
+                    <td>{{ k.urutan }}</td>
+                    <td><strong>{{ k.kode }}</strong></td>
+                    <td>{{ k.nama }}</td>
+                    <td>{{ k.bobot }}%</td>
+                    <td>
+                        {% if k.tipe == 'benefit' %}
+                            <span class="badge badge-baik">Benefit</span>
+                        {% else %}
+                            <span class="badge badge-cukup">Cost</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if k.aktif %}
+                            <span class="badge badge-sangat-baik">Aktif</span>
+                        {% else %}
+                            <span class="badge badge-kurang">Nonaktif</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <div class="table-actions">
+                            <a href="{% url 'kriteria_update' k.pk %}" class="btn btn-outline">Edit</a>
+                            <button type="button"
+                                    class="btn btn-danger"
+                                    onclick="openDeleteModal('{% url 'kriteria_delete' k.pk %}', '{{ k.nama|escapejs }}')">
+                                Hapus
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="7">
+                        <div class="table-empty">Belum ada data kriteria.</div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- MODAL HAPUS -->
+<div class="modal-overlay" id="deleteModal">
+    <div class="modal-box">
+        <h3>Hapus Kriteria?</h3>
+        <p>Yakin ingin menghapus <strong id="deleteModalNama"></strong>? Jika kriteria ini sudah punya data penilaian, sistem akan menolak dan minta kamu menonaktifkan saja.</p>
+        <form method="post" id="deleteModalForm">
+            {% csrf_token %}
+            <div class="modal-actions">
+                <button type="button" class="btn btn-outline" onclick="closeDeleteModal()">Batal</button>
+                <button type="submit" class="btn btn-danger">Ya, Hapus</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+
+
+{% block extra_js %}
+<script>
+function openDeleteModal(url, nama) {
+    document.getElementById('deleteModalForm').action = url;
+    document.getElementById('deleteModalNama').textContent = nama;
+    document.getElementById('deleteModal').classList.add('show');
+}
+function closeDeleteModal() {
+    document.getElementById('deleteModal').classList.remove('show');
+}
+document.getElementById('deleteModal').addEventListener('click', function (e) {
+    if (e.target === this) closeDeleteModal();
+});
+</script>
+{% endblock %}

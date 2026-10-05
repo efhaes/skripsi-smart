@@ -1,0 +1,73 @@
+{% load l10n %}
+
+<section class="card karyawan-attendance-panel" aria-labelledby="kehadiran-title">
+    <div class="karyawan-section-header">
+        <h2 id="kehadiran-title">Ringkasan Kehadiran</h2>
+    </div>
+
+    {% if ringkasan_absensi %}
+    <div class="karyawan-attendance-body">
+
+        <!-- Persentase Kehadiran -->
+        <div class="karyawan-attendance-primary">
+            <p class="karyawan-attendance-value">
+                {{ ringkasan_absensi.persen_hadir|floatformat:1 }}%
+            </p>
+
+            <p class="karyawan-muted">Persentase Kehadiran</p>
+
+            <progress
+                class="karyawan-attendance-progress"
+                max="100"
+                value="{{ ringkasan_absensi.persen_hadir|unlocalize }}"
+                aria-label="Persentase kehadiran">
+                {{ ringkasan_absensi.persen_hadir|floatformat:1 }}%
+            </progress>
+
+            <p class="karyawan-attendance-caption">
+                <strong>{{ ringkasan_absensi.hadir }}</strong> hadir dari
+                <strong>{{ ringkasan_absensi.total }}</strong> hari kerja tercatat
+            </p>
+        </div>
+
+        <!-- Rincian Kehadiran -->
+        <dl class="karyawan-attendance">
+            <div>
+                <dt>Hadir</dt>
+                <dd>{{ ringkasan_absensi.hadir }} hari</dd>
+            </div>
+
+            <div>
+                <dt>Tidak Hadir</dt>
+                <dd>{{ ringkasan_absensi.tidak_hadir }} hari</dd>
+            </div>
+
+            <div class="karyawan-attendance-total">
+                <dt>Total Hari Kerja Tercatat</dt>
+                <dd>{{ ringkasan_absensi.total }} hari</dd>
+            </div>
+        </dl>
+
+    </div>
+    {% else %}
+    <p class="karyawan-panel-empty">
+        Belum ada catatan kehadiran hari kerja untuk periode ini.
+    </p>
+    {% endif %}
+
+    <p class="karyawan-note">
+        Persentase dihitung dari hari kerja yang sudah tercatat.
+        Sabtu dan Minggu merupakan hari libur, sedangkan tanggal yang belum
+        dicatat tidak dihitung sebagai tidak hadir.
+    </p>
+
+    {% if tautan_absensi %}
+    <div class="karyawan-panel-actions">
+        <a
+            class="btn btn-outline btn-sm"
+            href="{% url 'absensi_saya' %}?bulan={{ bulan_dipilih }}&amp;tahun={{ tahun_dipilih }}">
+            Lihat Absensi Saya
+        </a>
+    </div>
+    {% endif %}
+</section>
