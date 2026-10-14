@@ -41,7 +41,9 @@ def dashboard_admin(request):
     )
 
     total_bobot = round(float(total_bobot), 2)
-    bobot_valid = abs(total_bobot - 100) <= 1
+
+    # Aturan yang sama dengan halaman Kriteria: total bobot harus 100.
+    bobot_valid = round(abs(total_bobot - 100), 2) <= 0.01
 
     # =========================================================
     # DEFAULT DATA PERIODE

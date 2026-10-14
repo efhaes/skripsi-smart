@@ -1,5 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
+from django.db import IntegrityError
+from django.db.models import ProtectedError
 
 from ...decorators import superuser_required
 from ...models import Kriteria, SubKriteria, Penilaian
@@ -17,7 +19,8 @@ def kriteria_list(request):
     context = {
         'daftar_kriteria': daftar_kriteria,
         'total_bobot_aktif': round(total_bobot_aktif, 2),
-        'bobot_valid': abs(total_bobot_aktif - 100) <= 0.01,
+        # Aturan yang sama dengan dashboard: total bobot harus 100.
+        'bobot_valid': round(abs(float(total_bobot_aktif) - 100), 2) <= 0.01,
     }
     return render(request, 'admin_panel/kriteria_list.html', context)
 
@@ -63,7 +66,15 @@ def kriteria_delete(request, pk):
         )
         return redirect('kriteria_list')
 
-    kriteria.delete()
+    try:
+        kriteria.delete()
+    except (ProtectedError, IntegrityError):
+        messages.error(
+            request,
+            "Kriteria tidak dapat dihapus karena masih terhubung dengan data lain. Silakan nonaktifkan saja."
+        )
+        return redirect('kriteria_list')
+
     messages.success(request, "Kriteria berhasil dihapus.")
     return redirect('kriteria_list')
 
@@ -151,6 +162,14 @@ def subkriteria_delete(request, pk):
         )
         return redirect('subkriteria_list')
 
-    subkriteria.delete()
+    try:
+        subkriteria.delete()
+    except (ProtectedError, IntegrityError):
+        messages.error(
+            request,
+            "Sub kriteria tidak dapat dihapus karena masih terhubung dengan data lain."
+        )
+        return redirect('subkriteria_list')
+
     messages.success(request, "Sub kriteria berhasil dihapus.")
     return redirect('subkriteria_list')

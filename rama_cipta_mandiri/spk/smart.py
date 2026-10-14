@@ -122,9 +122,12 @@ class SmartCalculator:
             raise ValueError("Tidak ada kriteria aktif.")
 
         total_bobot = sum(k.bobot for k in kriteria_aktif)
-        if abs(total_bobot - 100) > 1:   # toleransi 1%
+
+        # Aturan yang sama dengan halaman Kriteria dan dashboard:
+        # total bobot kriteria aktif harus 100% (toleransi 0,01).
+        if round(abs(total_bobot - 100), 2) > 0.01:
             raise ValueError(
-                f"Total bobot kriteria = {total_bobot:.2f}%. Harus mendekati 100%."
+                f"Total bobot kriteria = {total_bobot:.2f}%. Harus 100%."
             )
         
         # Validasi kelengkapan penilaian total
@@ -265,22 +268,36 @@ class SmartCalculator:
     # ----------------------------------------------------------
 
     def _build_hasil(self) -> list[dict]:
-        # Urutkan berdasarkan total nilai descending
+        # Urutkan berdasarkan total nilai descending. Nilai yang sama
+        # diurutkan menurut nama supaya urutannya selalu konsisten.
         ranking_list = sorted(
             self._alternatif,
-            key=lambda a: self._total_nilai.get(a.id, 0),
-            reverse=True
+            key=lambda a: (
+                -self._total_nilai.get(a.id, 0),
+                a.karyawan.nama.lower(),
+            ),
         )
 
         hasil = []
-        for rank, alt in enumerate(ranking_list, start=1):
+        rank = 0
+        total_sebelumnya = None
+
+        for urutan, alt in enumerate(ranking_list, start=1):
             total = self._total_nilai.get(alt.id, 0)
+
+            # Total nilai sama -> ranking sama (mis. 1, 1, 3, 4),
+            # bukan ranking berbeda yang ditentukan secara acak.
+            if total != total_sebelumnya:
+                rank = urutan
+                total_sebelumnya = total
+
             hasil.append({
                 'ranking': rank,
                 'alternatif_id': alt.id,
                 'kode': alt.kode,
                 'nama': alt.karyawan.nama,
                 'jabatan': alt.karyawan.jabatan,
+                'jabatan_label': alt.karyawan.get_jabatan_display(),
                 'total_nilai': total,
                 'predikat': get_predikat(total),
                 'detail_kriteria': self._detail.get(alt.id, []),
@@ -303,21 +320,28 @@ class SmartCalculator:
         HasilSmart.objects.filter(alternatif_id__in=alt_ids).delete()
 
         # Simpan Utility
+        # Ambil semua Penilaian periode ini sekaligus (bukan satu per satu).
+        penilaian_map = {
+            (p.alternatif_id, p.kriteria_id): p
+            for p in Penilaian.objects.filter(alternatif_id__in=alt_ids)
+        }
+
         utility_bulk = []
         for alt in self._alternatif:
             for kr_id, data in self._utility_matrix.get(alt.id, {}).items():
-                try:
-                    penilaian = Penilaian.objects.get(alternatif=alt, kriteria_id=kr_id)
-                    utility_bulk.append(
-                        Utility(
-                            penilaian=penilaian,
-                            nilai_max=data['nilai_max'],
-                            nilai_min=data['nilai_min'],
-                            nilai_utility=data['utility'],
-                        )
+                penilaian = penilaian_map.get((alt.id, kr_id))
+
+                if penilaian is None:
+                    continue
+
+                utility_bulk.append(
+                    Utility(
+                        penilaian=penilaian,
+                        nilai_max=data['nilai_max'],
+                        nilai_min=data['nilai_min'],
+                        nilai_utility=data['utility'],
                     )
-                except Penilaian.DoesNotExist:
-                    pass
+                )
 
         Utility.objects.bulk_create(utility_bulk)
 
@@ -370,7 +394,7 @@ def get_hasil_dari_db(periode_id: int) -> list[dict]:
             'alternatif__perhitungan__kriteria',
             'alternatif__penilaian',   # <-- tambahan: buat ambil nilai_raw asli
         )
-        .order_by('ranking')
+        .order_by('ranking', 'alternatif__karyawan__nama')
     )
 
     hasil = []
@@ -398,6 +422,7 @@ def get_hasil_dari_db(periode_id: int) -> list[dict]:
             'kode': alt.kode,
             'nama': alt.karyawan.nama,
             'jabatan': alt.karyawan.jabatan,
+            'jabatan_label': alt.karyawan.get_jabatan_display(),
             'total_nilai': h.total_nilai,
             'predikat': h.predikat,
             'detail_kriteria': detail_kriteria,

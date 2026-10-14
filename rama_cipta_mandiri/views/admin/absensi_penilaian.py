@@ -22,15 +22,38 @@ from ...models import (
 from ...spk import get_or_create_periode, get_periode_if_exists
 from ..absensi_matching import cari_subkriteria_untuk_nilai
 
-# ============================================================
-# CRUD ABSENSI KARYAWAN
-# ============================================================
-
-
 KARYAWAN_PER_HALAMAN = 100
 NAMA_HARI = ['Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab', 'Min']
 
 
+# ============================================================
+# HELPER
+# ============================================================
+def _ambil_bulan_tahun(request):
+    """
+    Membaca ?bulan= dan ?tahun= dari URL.
+    Mengembalikan (bulan, tahun), atau None kalau nilainya tidak valid.
+    """
+    hari_ini = date.today()
+
+    try:
+        bulan = int(request.GET.get('bulan', hari_ini.month))
+        tahun = int(request.GET.get('tahun', hari_ini.year))
+    except (TypeError, ValueError):
+        return None
+
+    if not 1 <= bulan <= 12:
+        return None
+
+    if not 2000 <= tahun <= 2100:
+        return None
+
+    return bulan, tahun
+
+
+# ============================================================
+# CRUD ABSENSI KARYAWAN
+# ============================================================
 @superuser_required
 def absensi_bulanan(request):
     """
@@ -38,8 +61,13 @@ def absensi_bulanan(request):
     Data karyawan dipaginasi untuk menjaga performa halaman.
     GET hanya membaca data, sedangkan penyimpanan dilakukan melalui POST.
     """
-    bulan = int(request.GET.get('bulan', date.today().month))
-    tahun = int(request.GET.get('tahun', date.today().year))
+    hasil_parse = _ambil_bulan_tahun(request)
+
+    if hasil_parse is None:
+        messages.error(request, 'Bulan atau tahun tidak valid.')
+        return redirect('absensi_bulanan')
+
+    bulan, tahun = hasil_parse
     page_number = request.GET.get('page', 1)
 
     # GET hanya mencari periode yang sudah ada.
@@ -52,9 +80,11 @@ def absensi_bulanan(request):
     ]
 
     # Karyawan aktif pada halaman saat ini.
+    # Urutan memakai id sebagai pembeda supaya nama kembar tidak
+    # tertukar atau hilang antar halaman.
     semua_karyawan = Karyawan.objects.filter(
         aktif=True
-    ).order_by('nama')
+    ).order_by('nama', 'id')
 
     paginator = Paginator(
         semua_karyawan,
@@ -110,6 +140,16 @@ def absensi_bulanan(request):
             f"Absensi {periode} (halaman {posted_page}) "
             f"berhasil disimpan."
         )
+
+        # Nilai C1 pada penilaian disimpan sebagai salinan, jadi tidak
+        # ikut berubah otomatis ketika absensi diubah.
+        if Penilaian.objects.filter(alternatif__periode=periode).exists():
+            messages.warning(
+                request,
+                f"Periode {periode} sudah memiliki data penilaian. "
+                f"Simpan ulang penilaian agar nilai C1 diperbarui, "
+                f"lalu proses ulang SMART jika hasilnya sudah ada."
+            )
 
         return redirect(
             f"{request.path}"
@@ -194,15 +234,11 @@ def absensi_bulanan(request):
     )
 
 
-
-KARYAWAN_PER_HALAMAN = 100
-
 # ===========================================================================
 # 1. LIST PENILAIAN
 # ===========================================================================
 @superuser_required
 def penilaian_list(request):
-
 
     periode_ids = (
         Penilaian.objects
@@ -317,7 +353,7 @@ def penilaian_form(request, periode_id=None):
     # ============================================================
     # KARYAWAN + PAGINATION
     # ============================================================
-    semua_karyawan = Karyawan.objects.filter(aktif=True).order_by('nama')
+    semua_karyawan = Karyawan.objects.filter(aktif=True).order_by('nama', 'id')
     page_number = request.GET.get('page', 1)
 
     paginator = Paginator(semua_karyawan, KARYAWAN_PER_HALAMAN)
@@ -414,10 +450,14 @@ def penilaian_form(request, periode_id=None):
                     )
                     continue
 
-                if not SubKriteria.objects.filter(
-                    pk=subkriteria_id,
-                    kriteria=kriteria
-                ).exists():
+                # isdigit() mencegah error 500 kalau nilai bukan angka.
+                if (
+                    not subkriteria_id.isdigit()
+                    or not SubKriteria.objects.filter(
+                        pk=subkriteria_id,
+                        kriteria=kriteria
+                    ).exists()
+                ):
                     errors.append(
                         f'Pilihan {kriteria.kode} untuk {karyawan.nama} tidak valid.'
                     )
@@ -490,6 +530,15 @@ def penilaian_form(request, periode_id=None):
             request,
             f'Penilaian {periode} berhasil disimpan.'
         )
+
+        # Hasil SMART yang sudah ada dihitung dari penilaian yang lama.
+        if HasilSmart.objects.filter(alternatif__periode=periode).exists():
+            messages.warning(
+                request,
+                f'Hasil SMART {periode} masih memakai penilaian lama. '
+                f'Proses ulang SMART agar hasilnya diperbarui.'
+            )
+
         return redirect(f'{request.path}?page={posted_page}')
 
     # ============================================================
@@ -584,6 +633,7 @@ def penilaian_form(request, periode_id=None):
 
     return render(request, 'admin_panel/penilaian_form.html', context)
 
+
 # ===========================================================================
 # 3. HAPUS PENILAIAN
 # ===========================================================================
@@ -604,13 +654,13 @@ def penilaian_hapus(request, periode_id):
     with transaction.atomic():
         # Hapus data penilaian dan hasil SMART, pertahankan Absensi dan Periode
         alt_ids = Alternatif.objects.filter(periode=periode).values_list('id', flat=True)
-        
+
         # Hapus dalam urutan yang aman terhadap FK
         Utility.objects.filter(penilaian__alternatif_id__in=alt_ids).delete()
         PerhitunganSmart.objects.filter(alternatif_id__in=alt_ids).delete()
         HasilSmart.objects.filter(alternatif_id__in=alt_ids).delete()
         Penilaian.objects.filter(alternatif_id__in=alt_ids).delete()
-        
+
         # Alternatif tetap dipertahankan karena masih bisa digunakan untuk Absensi
         # Periode tetap dipertahankan
 

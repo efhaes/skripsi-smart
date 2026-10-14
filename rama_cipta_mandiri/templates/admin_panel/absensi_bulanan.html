@@ -204,9 +204,31 @@
     });
 
     /*
-     * Reset dirty state ketika disimpan.
+     * Saat disimpan:
+     * - Jika tidak ada satu pun checkbox tercentang di halaman ini,
+     *   minta konfirmasi karena semua karyawan akan tersimpan
+     *   sebagai TIDAK HADIR.
+     * - Jika lanjut, reset dirty state.
      */
-    form.addEventListener('submit', function () {
+    form.addEventListener('submit', function (e) {
+        const adaYangDicentang = form.querySelector(
+            '.absensi-table tbody input[type="checkbox"]:checked'
+        );
+
+        if (!adaYangDicentang) {
+            const lanjut = confirm(
+                'Tidak ada satu pun karyawan yang dicentang di halaman ini.\n\n' +
+                'Jika dilanjutkan, semua karyawan di halaman ini akan ' +
+                'tersimpan sebagai TIDAK HADIR untuk seluruh hari kerja.\n\n' +
+                'Tetap simpan?'
+            );
+
+            if (!lanjut) {
+                e.preventDefault();
+                return;
+            }
+        }
+
         isDirty = false;
     });
 
